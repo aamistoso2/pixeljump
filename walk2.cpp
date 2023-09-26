@@ -561,6 +561,9 @@ int checkKeys(XEvent *e)
 		case XK_s:
 			screenCapture();
 			break;
+		case XK_g:
+			gl.show_name ^= 1;
+			break;
 		case XK_m:
 			gl.movie ^= 1;
 			break;
@@ -732,11 +735,11 @@ void render(void)
 	float cx = gl.xres/2.0;
 	float cy = gl.yres/2.0;
 
-	if (gl.show_name) {
+	//if (gl.show_name) {
 
-		display_border(gl.xres, gl.yres);
+	//	display_border(gl.xres, gl.yres);
 
-	}
+	//}
 
 	//
 	//show ground
@@ -928,6 +931,14 @@ void render(void)
 	r.bot = gl.yres - 20;
 	r.left = 10;
 	r.center = 0;
+
+
+	if (gl.show_name) {
+
+		display_border(gl.xres, gl.yres);
+
+	}
+
 	ggprint8b(&r, 16, c, "W   Walk cycle");
 	ggprint8b(&r, 16, c, "E   Explosion");
 	ggprint8b(&r, 16, c, "+   faster");
