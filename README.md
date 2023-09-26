@@ -1,5 +1,11 @@
 # Pixel Jump
 
+## To Do List:
+* WASD controls instead of arrow keys
+* Jump control
+* Make character smaller
+* Movement faster
+
 ## Overview
 
 Lost in a pixelated realm of captivating landscapes and intricate terrains, an unnamed hero embarks on a journey. Armed with agility and intelligence, they navigate through daunting obstacles in a world where every step is a riddle, and parkour holds the answer.
