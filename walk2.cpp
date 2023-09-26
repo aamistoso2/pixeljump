@@ -128,7 +128,7 @@ public:
 		walkImage=NULL;
 		MakeVector(ball_pos, 520.0, 0, 0);
 		MakeVector(ball_vel, 0, 0, 0);
-		delay = 0.1;
+		delay = 0.05;
 		exp.onoff=0;
 		exp.frame=0;
 		exp.image=NULL;
@@ -586,14 +586,14 @@ int checkKeys(XEvent *e)
 			break;
 		case XK_Down:
 			break;
-		case XK_equal:
-			gl.delay -= 0.005;
-			if (gl.delay < 0.005)
-				gl.delay = 0.005;
-			break;
-		case XK_minus:
-			gl.delay += 0.005;
-			break;
+	//	case XK_equal:
+	//		gl.delay -= 0.005;
+	//		if (gl.delay < 0.005)
+	//			gl.delay = 0.005;
+	//		break;
+	//	case XK_minus:
+	//		gl.delay += 0.005;
+	//		break;
 		case XK_Escape:
 			return 1;
 			break;
@@ -634,6 +634,12 @@ void physics(void)
 				gl.walkFrame -= 16;
 			timers.recordTime(&timers.walkTime);
 		}
+        //Sprint Functionality
+        for (int i=0; i<20; i++){
+            if (gl.keys[XK_Shift_L] || gl.keys[XK_Shift_R]){
+                gl.delay = 0.002;
+            }
+        }
 		for (int i=0; i<20; i++) {
 			if (gl.keys[XK_Left] || gl.keys[XK_a]) {
 				gl.box[i][0] += 1.0 * (0.05 / gl.delay);
