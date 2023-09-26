@@ -622,7 +622,7 @@ Flt VecNormalize(Vec vec)
 
 void physics(void)
 {
-	if (gl.walk || gl.keys[XK_Right] || gl.keys[XK_Left]) {
+	if (gl.walk || gl.keys[XK_Right] || gl.keys[XK_Left] || gl.keys[XK_a] || gl.keys[XK_d]) {
 		//man is walking...
 		//when time is up, advance the frame.
 		timers.recordTime(&timers.timeCurrent);
@@ -635,14 +635,14 @@ void physics(void)
 			timers.recordTime(&timers.walkTime);
 		}
 		for (int i=0; i<20; i++) {
-			if (gl.keys[XK_Left]) {
+			if (gl.keys[XK_Left] || gl.keys[XK_a]) {
 				gl.box[i][0] += 1.0 * (0.05 / gl.delay);
 				if (gl.box[i][0] > gl.xres + 10.0)
 					gl.box[i][0] -= gl.xres + 10.0;
 				gl.camera[0] -= 2.0/lev.tilesize[0] * (0.05 / gl.delay);
 				if (gl.camera[0] < 0.0)
 					gl.camera[0] = 0.0;
-			} else {
+			} else if (gl.keys[XK_Right] || gl.keys[XK_d]){
 				gl.box[i][0] -= 1.0 * (0.05 / gl.delay);
 				if (gl.box[i][0] < -10.0)
 					gl.box[i][0] += gl.xres + 10.0;
@@ -840,7 +840,7 @@ void render(void)
 	float fx = (float)ix / 8.0;
 	float fy = (float)iy / 2.0;
 	glBegin(GL_QUADS);
-		if (gl.keys[XK_Left]) {
+		if (gl.keys[XK_Left] || gl.keys[XK_a]) {
 			glTexCoord2f(fx+.125, fy+.5); glVertex2i(cx-w, cy-h);
 			glTexCoord2f(fx+.125, fy);    glVertex2i(cx-w, cy+h);
 			glTexCoord2f(fx,      fy);    glVertex2i(cx+w, cy+h);
