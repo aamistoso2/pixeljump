@@ -5,7 +5,7 @@
 void display_border(int xres, int yres) 
 {
 	int b = 50;
-	glColor3f();
+	glColor3f(0, 0, 0);
 	glPushMatrix();
 	glBegin(GL_TRIANGLES);
 		glVertex2f(0, 0);

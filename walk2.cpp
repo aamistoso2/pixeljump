@@ -24,6 +24,8 @@
 #include "log.h"
 //#include "ppm.h"
 #include "fonts.h"
+#include "dlopez2.h"
+
 
 //defined types
 typedef double Flt;
@@ -104,6 +106,7 @@ public:
 	int walk;
 	int walkFrame;
 	double delay;
+	int show_name;
 	Image *walkImage;
 	GLuint walkTexture;
 	Vec box[20];
@@ -129,6 +132,7 @@ public:
 		MakeVector(ball_pos, 520.0, 0, 0);
 		MakeVector(ball_vel, 0, 0, 0);
 		delay = 0.05;
+		show_name = 0;
 		exp.onoff=0;
 		exp.frame=0;
 		exp.image=NULL;
@@ -727,6 +731,13 @@ void render(void)
 	glClear(GL_COLOR_BUFFER_BIT);
 	float cx = gl.xres/2.0;
 	float cy = gl.yres/2.0;
+
+	if (gl.show_name) {
+
+		display_border(gl.xres, gl.yres);
+
+	}
+
 	//
 	//show ground
 	glBegin(GL_QUADS);
