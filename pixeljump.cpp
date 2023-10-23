@@ -27,6 +27,7 @@
 #include "dlopez2.h"
 
 
+
 //defined types
 typedef double Flt;
 typedef double Vec[3];
@@ -333,6 +334,7 @@ public:
 		}
 		if (!ppmFlag)
 			unlink(ppmname);
+        
 	}
 };
 Image img[3] = {
@@ -735,13 +737,6 @@ void render(void)
 	float cx = gl.xres/2.0;
 	float cy = gl.yres/2.0;
 
-	//if (gl.show_name) {
-
-	//	display_border(gl.xres, gl.yres);
-
-	//}
-
-	//
 	//show ground
 	glBegin(GL_QUADS);
 		glColor3f(0.2, 0.2, 0.2);
@@ -819,6 +814,7 @@ void render(void)
 		}
 		col = (col+1) % lev.ncols;
 	}
+
 	glColor3f(1.0, 1.0, 0.1);
 	glPushMatrix();
 	//put ball in its place
