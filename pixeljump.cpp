@@ -504,7 +504,6 @@ void checkMouse(XEvent *e)
 			//Mouse moved
 			savex = e->xbutton.x;
 			savey = e->xbutton.y;
-			last_mouse_movement();
 			mouse_movement_distance(e->xbutton.x, e->xbutton.y, false);
 		}
 	}
