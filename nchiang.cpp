@@ -28,7 +28,6 @@ void last_mouse_movement()
         clock_t current_time = clock();
 
         double sec_elapsed = (double)(current_time - last_mouse_time) / CLOCKS_PER_SEC;
-        printf("sec since mouse move: %lf \n", sec_elapsed);
 
         last_mouse_time = current_time;
 }
