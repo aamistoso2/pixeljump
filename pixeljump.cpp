@@ -25,6 +25,7 @@
 //#include "ppm.h"
 #include "fonts.h"
 #include "dlopez2.h"
+#include "nchiang.h"
 #include "aamistoso.h"
 
 
@@ -349,6 +350,7 @@ int main(void)
 	initOpengl();
 	init();
 	int done = 0;
+
 	while (!done) {
 		while (x11.getXPending()) {
 			XEvent e = x11.getXNextEvent();
@@ -496,6 +498,7 @@ void checkMouse(XEvent *e)
 		}
 	}
 	if (e->type == MotionNotify) {
+		last_mouse_movement();
 		if (savex != e->xbutton.x || savey != e->xbutton.y) {
 			//Mouse moved
 			savex = e->xbutton.x;
