@@ -5,7 +5,7 @@
 #include <time.h>
 
 static clock_t last_mouse_time = 0;
-static double sec_elapsed = 0;
+double sec_elapsed = 0;
 
 void display_name(int x, int y)
 {
