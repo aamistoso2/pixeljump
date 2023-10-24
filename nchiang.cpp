@@ -28,14 +28,13 @@ int get_last_mouse_movement(const bool get)
     }
 
     if (!get){
-        current_time = clock();
-
-        sec_elapsed = (double)(current_time - last_mouse_time) / CLOCKS_PER_SEC;
-
-        last_mouse_time = current_time;
+        sec_elapsed = 0;
     }
 
     if (get){
+        current_time = clock();
+        sec_elapsed += (double)(current_time - last_mouse_time) / CLOCKS_PER_SEC;
+        last_mouse_time = current_time;
         return sec_elapsed;
     }
 
