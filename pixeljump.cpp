@@ -498,11 +498,11 @@ void checkMouse(XEvent *e)
 		}
 	}
 	if (e->type == MotionNotify) {
-		last_mouse_movement();
 		if (savex != e->xbutton.x || savey != e->xbutton.y) {
 			//Mouse moved
 			savex = e->xbutton.x;
 			savey = e->xbutton.y;
+			last_mouse_movement();
 		}
 	}
 }
