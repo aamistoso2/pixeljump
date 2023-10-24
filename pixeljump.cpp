@@ -27,7 +27,7 @@
 #include "dlopez2.h"
 #include "nchiang.h"
 #include "aamistoso.h"
-
+#include "usingh.h"
 
 //defined types
 typedef double Flt;
@@ -736,6 +736,7 @@ void physics(void)
 
 void render(void)
 {
+    incrementRenderCount();
 	Rect r;
 	//Clear the screen
 	glClearColor(0.1, 0.1, 0.1, 1.0);
@@ -974,6 +975,8 @@ void render(void)
                 total_running_time(true));
 		ggprint13(&r, 16, 0x00ffff00, "sec since mouse move: %i",
                 get_last_mouse_movement(true));
+        ggprint13(&r, 16, 0x00ffff00, "Render calls: %i",
+                 getRenderCount(true));
     }
 
 }
