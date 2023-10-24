@@ -2,28 +2,9 @@
 //
 #include "fonts.h"
 #include <GL/glx.h>
+#include <time.h>
 
-/*void display_border(int xres, int yres)
-{
-    // Draw a border around the window
-    //
-    int b = 50;
-    glColor3f(1.0f, 1.0f, 0.0f);
-    glPushMatrix();
-    glBegin(GL_TRIANGLE_STRIP);
-        glVertex2i(0,     0);
-        glVertex2i(0+b,   0+b);
-        glVertex2i(0,     0+yres);
-        glVertex2i(0+b,   0+yres-b);
-        glVertex2i(xres,  0+yres);
-        glVertex2i(xres-b,  0+yres-b);
-        glVertex2i(xres,  0);
-        glVertex2i(xres-b, b);
-        glVertex2i(0,     0);
-        glVertex2i(0+b,   0+b);
-    glend();
-    glPopMatrix();
-}*/
+static clock_t last_mouse_time = 0;
 
 void display_name(int x, int y)
 {
@@ -34,3 +15,12 @@ void display_name(int x, int y)
     ggprint8b(&r, 0x00ffff00, 0, "Nicklas");
 }
 
+void last_mouse_movement()
+{
+    clock_t current_time = clock();
+
+    double sec_elapsed = (double)(current_time - last_mouse_time) / CLOCKS_PER_SEC;
+    printf("sec since mouse move: %lf \n", sec_elapsed);
+
+    last_mouse_time = current_time;
+}
