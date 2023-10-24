@@ -5,6 +5,10 @@
 //CLASS EXAMPLE---------------------------------------
 #include <fonts.h>
 #include <GL/glx.h>
+#include <iostream>
+#include <ctime>
+#include <thread>
+#include <ailarde.h>
 
 void display_border(int xres, int yres)
 {
@@ -39,3 +43,65 @@ void display_name(int x, int y)
 }
 //----------------------------------------------------
 
+
+/*----------------------------------------------------
+//MAIN MENU
+int displayMainMenu()
+{
+int choice;
+
+wnile (true)
+{
+
+std::cout << "Main Menu" << std:endl;
+std::cout << "Main Menu" << std:endl;
+std::cout << "Main Menu" << std:endl;
+std::cout << "Main Menu" << std:endl;
+std::cout << "Main Menu" << std:endl;
+}
+}
+//----------------------------------------------------
+*/
+
+//----------------------------------------------------
+//LAB 9
+int total_run_time(const bool get)
+{
+    static int first = 1;
+    static int start;
+    if (first)
+    {
+        start = time(NULL);
+        first = 0;
+    }
+    if (get)
+    {
+        return time(NULL) - start;
+    }
+    return 0;
+}
+
+//Time since key press
+//Time keyPressTimes[256] = {0};
+
+Time timeSinceKeyPress(int key)
+{
+    Time currentTime = XServerTime(display);
+    return currentTime - keyPressTimes[key];
+}
+
+/*
+KeyTimer::KeyTimer() {
+    lastKeyPressTime = 0;
+}
+
+void KeyTimer::updateKeyPressTime() {
+    lastKeyPressTime = time(NULL);
+}
+
+int KeyTimer::secondsSinceLastKeyPress() {
+    time_t currentTime = time(NULL);
+    return static_cast<int>(currentTime - lastKeyPressTime);
+}
+*/
+//----------------------------------------------------
