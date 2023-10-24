@@ -26,6 +26,7 @@
 #include "fonts.h"
 #include "dlopez2.h"
 #include "nchiang.h"
+#include "aamistoso.h"
 
 
 //defined types
