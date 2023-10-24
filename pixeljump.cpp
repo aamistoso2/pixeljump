@@ -243,6 +243,7 @@ public:
 		Colormap cmap = XCreateColormap(dpy, root, vi->visual, AllocNone);
 		swa.colormap = cmap;
 		swa.event_mask = ExposureMask | KeyPressMask | KeyReleaseMask |
+			PointerMotionMask | MotionNotify | ButtonPress | ButtonRelease |
 			StructureNotifyMask | SubstructureNotifyMask;
 		win = XCreateWindow(dpy, root, 0, 0, gl.xres, gl.yres, 0,
 			vi->depth, InputOutput, vi->visual,
@@ -503,6 +504,8 @@ void checkMouse(XEvent *e)
 			//Mouse moved
 			savex = e->xbutton.x;
 			savey = e->xbutton.y;
+			last_mouse_movement();
+			mouse_movement_distance(e->xbutton.x, e->xbutton.y, false);
 		}
 	}
 }
@@ -977,6 +980,8 @@ void render(void)
                 get_last_mouse_movement(true));
         ggprint13(&r, 16, 0x00ffff00, "n render calls: %i",
                  getRenderCount(true));
+				ggprint13(&r, 16, 0x00ffff00, "mouse distance: %lf",
+									mouse_movement_distance(0, 0, true));
     }
 
 }
