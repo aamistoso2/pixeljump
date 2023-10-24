@@ -25,7 +25,7 @@
 //#include "ppm.h"
 #include "fonts.h"
 #include "dlopez2.h"
-
+#include "aamistoso.h"
 
 
 //defined types
@@ -108,6 +108,7 @@ public:
 	int walkFrame;
 	double delay;
 	int show_name;
+    int statistics = 0;
 	Image *walkImage;
 	GLuint walkTexture;
 	Vec box[20];
@@ -561,7 +562,8 @@ int checkKeys(XEvent *e)
 	(void)shift;
 	switch (key) {
 		case XK_s:
-			screenCapture();
+			//screenCapture();
+            gl.statistics ^= 1;
 			break;
 		case XK_g:
 			gl.show_name ^= 1;
@@ -587,6 +589,7 @@ int checkKeys(XEvent *e)
 			timers.recordTime(&gl.exp44.time);
 			gl.exp44.onoff ^= 1;
 			break;
+            
 		case XK_Left:
 			break;
 		case XK_Right:
@@ -945,6 +948,29 @@ void render(void)
 	if (gl.movie) {
 		screenCapture();
 	}
+
+    if (gl.statistics) {
+        glColor3ub(100, 100, 100);
+        glPushMatrix();
+        glTranslatef(20.0, 20.0, 0.0);
+        int w = 230;
+        int h = 130;
+        glBegin(GL_QUADS);
+            glVertex2f(0, 0);
+            glVertex2f(0, h);
+            glVertex2f(0, h);
+            glVertex2f(w, 0);
+            glVertex2f(w, 0);
+        glEnd();
+        glPopMatrix();
+        r.bot = 124;
+        r.left = 28;
+        r.center = 0;
+        ggprint13(&r, 20, 0x0055ff55, "Statistics...");
+        ggprint13(&r, 16, 0x00ffff00, "sec running time: %i",
+                total_running_time(true));
+    }
+
 }
 
 

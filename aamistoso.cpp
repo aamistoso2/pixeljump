@@ -13,3 +13,22 @@ void display_aldrin() {
     */
     cout << "Aldrin\n";
 }
+
+int total_running_time(const bool get) {
+    static int firsttime = 1;
+    static int start_time;
+    if (firsttime) {
+        start_time = time(NULL);
+        firsttime = 0;
+    }
+    if (get) {
+        return time(NULL) - start_time;
+    }
+    return 0;
+}
+/*
+int total_physics_call(const bool get) {
+    
+    return 0;
+}
+*/
