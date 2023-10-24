@@ -15,12 +15,17 @@ void display_name(int x, int y)
     ggprint8b(&r, 0x00ffff00, 0, "Nicklas");
 }
 
-void last_mouse_movement()
+int last_mouse_movement(const bool yes)
 {
-    clock_t current_time = clock();
+    if (yes){
+        clock_t current_time = clock();
 
-    double sec_elapsed = (double)(current_time - last_mouse_time) / CLOCKS_PER_SEC;
-    printf("sec since mouse move: %lf \n", sec_elapsed);
+        double sec_elapsed = (double)(current_time - last_mouse_time) / CLOCKS_PER_SEC;
+        printf("sec since mouse move: %lf \n", sec_elapsed);
 
-    last_mouse_time = current_time;
+        last_mouse_time = current_time;
+
+        return sec_elapsed;
+    }
+    return 0;
 }

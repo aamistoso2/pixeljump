@@ -972,6 +972,8 @@ void render(void)
         ggprint13(&r, 20, 0x0055ff55, "Statistics...");
         ggprint13(&r, 16, 0x00ffff00, "sec running time: %i",
                 total_running_time(true));
+		ggprint13(&r, 16, 0x00ffff00, "sec since mouse move: %i",
+                last_mouse_movement(true));
     }
 
 }
