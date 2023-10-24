@@ -16,18 +16,19 @@ void display_name(int x, int y)
     ggprint8b(&r, 0x00ffff00, 0, "Nicklas");
 }
 
-void last_mouse_movement()
+int get_last_mouse_movement(const bool get)
 {
+    if (!get){
         clock_t current_time = clock();
 
         sec_elapsed = (double)(current_time - last_mouse_time) / CLOCKS_PER_SEC;
 
         last_mouse_time = current_time;
-}
+    }
 
-int get_last_mouse_movement(const bool yes){
-    if (yes)
+    if (get){
         return sec_elapsed;
-    else
-        return 0; 
+    }
+
+    return 0;
 }
