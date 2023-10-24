@@ -3,7 +3,7 @@
 #include "fonts.h"
 #include <GL/glx.h>
 
-void display_border(int xres, int yres)
+/*void display_border(int xres, int yres)
 {
     // Draw a border around the window
     //
@@ -23,7 +23,7 @@ void display_border(int xres, int yres)
         glVertex2i(0+b,   0+b);
     glend();
     glPopMatrix();
-}
+}*/
 
 void display_name(int x, int y)
 {
@@ -31,6 +31,6 @@ void display_name(int x, int y)
     r.bot = y;
     r.left = x;
     r.center = 0;
-    ggprint8b(&r, 0x00ffff00, "Nicklas");
+    ggprint8b(&r, 0x00ffff00, 0, "Nicklas");
 }
 
