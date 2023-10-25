@@ -1,16 +1,9 @@
-#ifndef _AILARDE_H
-#define _AILARDE_H
-#ifndef KEY_TIME_H
-#define KEY_TIME_H
+#ifndef _AILARDE_H_
+#define _AILARDE_H_
 
-extern void display_name(int, int);
-extern void display_border(int xres, int yres);
+//extern void display_name(int, int);
+//extern void display_border(int xres, int yres);
 
-class ailarde
-{
-    int abc;
-};
-
-Time timeSinceKeyPress(int key);
+extern int time_key_press(const bool yes);
 #endif
 
