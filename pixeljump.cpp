@@ -645,6 +645,9 @@ void physics(void)
     if (gl.walk || gl.keys[XK_Right] || gl.keys[XK_Left] || gl.keys[XK_a] || gl.keys[XK_d]) {
         //man is walking...
         //when time is up, advance the frame.
+        //
+        /* DONT NEED MAN PHYSICS
+         * -------------------------------------------------------------------
         timers.recordTime(&timers.timeCurrent);
         double timeSpan = timers.timeDiff(&timers.walkTime, &timers.timeCurrent);
         if (timeSpan > gl.delay) {
@@ -654,6 +657,8 @@ void physics(void)
                 gl.walkFrame -= 16;
             timers.recordTime(&timers.walkTime);
         }
+        ----------------------------------------------------------------------
+        */
         //Sprint Functionality
         for (int i=0; i<20; i++){
             if (gl.keys[XK_Shift_L] || gl.keys[XK_Shift_R]){
@@ -749,6 +754,7 @@ void render(void)
     float cx = gl.xres/2.0;
     float cy = gl.yres/2.0;
 
+    /*
     //show ground
     glBegin(GL_QUADS);
     glColor3f(0.2, 0.2, 0.2);
@@ -759,6 +765,7 @@ void render(void)
     glVertex2i(0,         0);
     glEnd();
     //
+    */
     //show boxes as background
     for (int i=0; i<20; i++) {
         glPushMatrix();
@@ -858,6 +865,8 @@ void render(void)
     glColor3f(1.0, 1.0, 1.0);
     glBindTexture(GL_TEXTURE_2D, gl.walkTexture);
     //
+    //GRAPHICS OF THE MAN
+    /*-----------------------------------------------------------
     glEnable(GL_ALPHA_TEST);
     glAlphaFunc(GL_GREATER, 0.0f);
     glColor4ub(255,255,255,255);
@@ -883,6 +892,8 @@ void render(void)
     glPopMatrix();
     glBindTexture(GL_TEXTURE_2D, 0);
     glDisable(GL_ALPHA_TEST);
+    */
+    //--------------------------------------------------------------
     //
     //
     if (gl.exp.onoff) {
