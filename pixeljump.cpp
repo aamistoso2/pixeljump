@@ -642,6 +642,7 @@ Flt VecNormalize(Vec vec)
 
 void physics(void)
 {
+    total_physics_function_calls(false);
     if (gl.walk || gl.keys[XK_Right] || gl.keys[XK_Left] || gl.keys[XK_a] || gl.keys[XK_d]) {
         //man is walking...
         //when time is up, advance the frame.
@@ -993,6 +994,8 @@ void render(void)
                 get_last_mouse_movement(true));
         ggprint13(&r, 16, 0x00ffff00, "n render calls: %i",
                 getRenderCount(true));
+        ggprint13(&r, 16, 0x00ffff00, "n physics calls: %i",
+                total_physics_function_calls(true));
         ggprint13(&r, 16, 0x00ffff00, "mouse distance: %lf",
                 mouse_movement_distance(0, 0, true));
         ggprint13(&r, 16, 0x00ffff00, "sec since key pressed: %i",
