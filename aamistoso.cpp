@@ -26,9 +26,14 @@ int total_running_time(const bool get) {
     }
     return 0;
 }
-/*
-int total_physics_call(const bool get) {
-    
-    return 0;
+static int physics_call_count = 0;
+
+int total_physics_function_calls(const bool get)
+{
+    if (get) {
+        return physics_call_count;
+    } else {
+        physics_call_count++;
+        return -1;
+    }
 }
-*/
