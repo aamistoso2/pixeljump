@@ -5,5 +5,7 @@
 //extern void display_border(int xres, int yres);
 
 extern int time_key_press(const bool yes);
+extern void showCoins(int, int);
+
 #endif
 
