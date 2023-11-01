@@ -647,12 +647,12 @@ void physics(void)
         //man is walking...
         //when time is up, advance the frame.
         //
-        /* DONT NEED MAN PHYSICS
+        /* DONT NEED MAN PHYSICS - ADAM ILARDE
          * -------------------------------------------------------------------
         timers.recordTime(&timers.timeCurrent);
         double timeSpan = timers.timeDiff(&timers.walkTime, &timers.timeCurrent);
         if (timeSpan > gl.delay) {
-            //advance
+            /advance
             ++gl.walkFrame;
             if (gl.walkFrame >= 16)
                 gl.walkFrame -= 16;
@@ -756,6 +756,7 @@ void render(void)
     float cy = gl.yres/2.0;
 
     /*
+     * TOOK OUT GROUND - ADAM ILARDE
     //show ground
     glBegin(GL_QUADS);
     glColor3f(0.2, 0.2, 0.2);
@@ -767,6 +768,9 @@ void render(void)
     glEnd();
     //
     */
+
+
+/* WE DON'T NEED THE BACKGROUND - ADAM ILARDE
     //show boxes as background
     for (int i=0; i<20; i++) {
         glPushMatrix();
@@ -780,6 +784,10 @@ void render(void)
         glEnd();
         glPopMatrix();
     }
+
+*/
+    
+    
     //
     //========================
     //Render the tile system
@@ -790,6 +798,7 @@ void render(void)
     Flt offy = lev.tile_base;
     int ncols_to_render = gl.xres / lev.tilesize[0] + 2;
     int col = (int)(gl.camera[0] / dd);
+    
     col = col % lev.ncols;
     //Partial tile offset must be determined here.
     //The leftmost tile might be partially off-screen.
@@ -802,9 +811,25 @@ void render(void)
     //offx: the offset to the left of the screen to start drawing tiles
     Flt offx = -dec * dd;
     //Log("gl.camera[0]: %lf   offx: %lf\n",gl.camera[0],offx);
+    //
+    
     for (int j=0; j<ncols_to_render; j++) {
         int row = lev.nrows-1;
         for (int i=0; i<lev.nrows; i++) {
+
+            //SHOWING WHITE COINS - ADAM ILARDE
+            //int tileCenterX = j * tx + offx + tx / 2;
+            //int tileCenterY = i * lev.ftsz[1] + offy + ty / 2;
+            
+            //int circleX; = 600;
+            //int circleY; = 300;
+
+            // Draw a circle at the center of the tile
+            //showCoins(circleX, circleY);
+            //showCoins(tileCenterX, tileCenterY);
+
+
+            
             if (lev.arr[row][col] == 'w') {
                 glColor3f(0.8, 0.8, 0.6);
                 glPushMatrix();
@@ -819,6 +844,11 @@ void render(void)
                 glPopMatrix();
             }
             if (lev.arr[row][col] == 'b') {
+
+                //int circleX = 600;
+                //int circleY = 300;
+                showCoins(tx, ty);
+
                 glColor3f(0.9, 0.2, 0.2);
                 glPushMatrix();
                 glTranslated((Flt)j*dd+offx, (Flt)i*lev.ftsz[1]+offy, 0);
@@ -831,6 +861,9 @@ void render(void)
                 glPopMatrix();
             }
             --row;
+
+
+
         }
         col = (col+1) % lev.ncols;
     }
@@ -866,7 +899,8 @@ void render(void)
     glColor3f(1.0, 1.0, 1.0);
     glBindTexture(GL_TEXTURE_2D, gl.walkTexture);
     //
-    //GRAPHICS OF THE MAN
+    //
+    //GRAPHICS OF THE MAN - ADAM ILARDE
     /*-----------------------------------------------------------
     glEnable(GL_ALPHA_TEST);
     glAlphaFunc(GL_GREATER, 0.0f);
@@ -959,12 +993,14 @@ void render(void)
 
     }
 
-    ggprint8b(&r, 16, c, "W   Walk cycle");
+
+    //ggprint8b(&r, 16, c, "W   Walk cycle");
     ggprint8b(&r, 16, c, "E   Explosion");
     ggprint8b(&r, 16, c, "+   faster");
     ggprint8b(&r, 16, c, "-   slower");
-    ggprint8b(&r, 16, c, "right arrow -> walk right");
-    ggprint8b(&r, 16, c, "left arrow  <- walk left");
+    ggprint8b(&r, 16, c, "Shift -> run faster");
+    ggprint8b(&r, 16, c, "right arrow or 'D' -> walk right");
+    ggprint8b(&r, 16, c, "left arrow or 'A'  <- walk left");
     ggprint8b(&r, 16, c, "frame: %i", gl.walkFrame);
     if (gl.movie) {
         screenCapture();

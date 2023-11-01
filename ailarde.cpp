@@ -2,67 +2,82 @@
 // File: Source file
 // Date: 9/25/2023
 
-//CLASS EXAMPLE---------------------------------------
 #include "fonts.h"
 #include <GL/glx.h>
 #include <iostream>
 #include <time.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+#include <math.h>
+#include <X11/Xlib.h>
+#include <X11/keysym.h>
+#include <GL/glx.h>
+#include "log.h"
+//#include "ppm.h"
+#include "fonts.h"
 
-
+//CLASS EXAMPLE--------------------------------------
 /*
-void display_border(int xres, int yres)
-{
-    //draw a border around the window
-    int b = 50;
-    glColor3f(1.0f, 1.0f, 0.0f);
-    glPushMatrix();
-    glBegin(GL_TRIANGLE_STRIP);
-    glVertex2i(0, 0);
-    glVertex2i(0+b, 0+b);
-    glVertex2i(0, 0+yres);
-    glVertex2i(0, 0+yres-b);
-    glVertex2i(xres, 0+yres);
-    glVertex2i(xres-b, 0+yres-b);
-    glVertex2i(xres, 0);
-    glVertex2i(xres-b, b);
-    glVertex2i(0, 0);
-    glVertex2i(0+b, 0+b);
-    glEnd();
-    glPopMatrix();
+   void display_border(int xres, int yres)
+   {
+//draw a border around the window
+int b = 50;
+glColor3f(1.0f, 1.0f, 0.0f);
+glPushMatrix();
+glBegin(GL_TRIANGLE_STRIP);
+glVertex2i(0, 0);
+glVertex2i(0+b, 0+b);
+glVertex2i(0, 0+yres);
+glVertex2i(0, 0+yres-b);
+glVertex2i(xres, 0+yres);
+glVertex2i(xres-b, 0+yres-b);
+glVertex2i(xres, 0);
+glVertex2i(xres-b, b);
+glVertex2i(0, 0);
+glVertex2i(0+b, 0+b);
+glEnd();
+glPopMatrix();
 }
 
 
 void display_name(int x, int y)
 {
-    //draw a border
+//draw a border
 
-    Rect r;
-    r.bot =y;
-    r.left = x;
-    r.center = 0;
-    ggprint8b(&r, 0 , 0x00ffff00, "ailarde");
+Rect r;
+r.bot =y;
+r.left = x;
+r.center = 0;
+ggprint8b(&r, 0 , 0x00ffff00, "ailarde");
 }
 //----------------------------------------------------
 */
 
-/*----------------------------------------------------
-//MAIN MENU
-int displayMainMenu()
-{
-int choice;
-
-wnile (true)
-{
-
-std::cout << "Main Menu" << std:endl;
-std::cout << "Main Menu" << std:endl;
-std::cout << "Main Menu" << std:endl;
-std::cout << "Main Menu" << std:endl;
-std::cout << "Main Menu" << std:endl;
-}
-}
 //----------------------------------------------------
-*/
+//coins
+void showCoins(int x, int y)
+{
+    
+    // Set the color to gold
+    glColor3f(1.0, 1.0, 1.0);
+
+    // Draw a small circle using OpenGL primitives
+    glBegin(GL_TRIANGLE_FAN);
+
+    for (int i = 0; i < 360; i += 10) 
+    {
+        float angle = i * M_PI / 180.0;
+        float radius = 5.0; // Adjust the radius as needed
+        glVertex2f(x + radius * cos(angle), y + radius * sin(angle));
+    }
+    glEnd();
+
+}
+
+//----------------------------------------------------
+
 
 //----------------------------------------------------
 //LAB 9
@@ -74,20 +89,20 @@ static int first = 1;
 static double time_passes;
 
 /*
-int total_run_time(const bool get)
+   int total_run_time(const bool get)
+   {
+// static int first = 1;
+static int start;
+if (first)
 {
-   // static int first = 1;
-    static int start;
-    if (first)
-    {
-        start = time(NULL);
-        first = 0;
-    }
-    if (get)
-    {
-        return time(NULL) - start;
-    }
-    return 0;
+start = time(NULL);
+first = 0;
+}
+if (get)
+{
+return time(NULL) - start;
+}
+return 0;
 }
 */
 
