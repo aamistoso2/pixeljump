@@ -4,6 +4,7 @@
 #include <GL/glx.h>
 #include <time.h>
 
+// ---------Sec Since Mouse Last Moved--------------------------
 static clock_t last_mouse_time;
 static clock_t current_time;
 static int first_time = 1;
@@ -40,3 +41,16 @@ int get_last_mouse_movement(const bool get)
 
     return 0;
 }
+// -------------------------------------------------------------
+// ---------Implementation of the Jump Functionality------------
+int JUMP_VELOCITY = 0.02;
+void ball_jump(){
+    if (gl.keys[XK_space]) {
+        // Implement the jump functionality here
+        if (gl.ball_pos[1] == (Flt)hgt) {
+            // If on ground, allow to jump
+            gl.ball_vel[1] = JUMP_VELOCITY;
+        }
+    }
+}
+// -------------------------------------------------------------
