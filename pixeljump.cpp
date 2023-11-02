@@ -654,12 +654,13 @@ void physics(void)
                 gl.walkFrame -= 16;
             timers.recordTime(&timers.walkTime);
         }
-        //Sprint Functionality
+        //Sprint Functionality - Nicklas Chiang
         for (int i=0; i<20; i++){
             if (gl.keys[XK_Shift_L] || gl.keys[XK_Shift_R]){
                 gl.delay = 0.002;
             }
         }
+
         for (int i=0; i<20; i++) {
             if (gl.keys[XK_Left] || gl.keys[XK_a]) {
                 gl.box[i][0] += 1.0 * (0.05 / gl.delay);
@@ -700,6 +701,9 @@ void physics(void)
             }
         }
     }
+    //Jump Functionality - Nicklas Chiang
+    ball_jump();
+    
     if (gl.exp44.onoff) {
         //explosion is happening
         timers.recordTime(&timers.timeCurrent);
