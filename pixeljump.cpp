@@ -109,6 +109,9 @@ class Global {
         int movie, movieStep;
         int walk;
         int walkFrame;
+        int isJumping = 0;
+        int jumpFrame = 0;
+        int maxJumpFrames = 15;
         double delay;
         int show_name;
         int statistics = 0;
@@ -597,7 +600,9 @@ int checkKeys(XEvent *e)
             timers.recordTime(&gl.exp44.time);
             gl.exp44.onoff ^= 1;
             break;
-
+        case XK_space:
+            jumping();
+            break;
         case XK_Left:
             break;
         case XK_Right:
@@ -658,13 +663,8 @@ void physics(void)
                 gl.walkFrame -= 16;
             timers.recordTime(&timers.walkTime);
         }
-<<<<<<< HEAD
-        //Sprint Functionality - Nicklas Chiang
-=======
-        ----------------------------------------------------------------------
         */
-        //Sprint Functionality
->>>>>>> master
+        //Sprint Functionality - Nicklas Chiang
         for (int i=0; i<20; i++){
             if (gl.keys[XK_Shift_L] || gl.keys[XK_Shift_R]){
                 gl.delay = 0.002;
@@ -712,7 +712,11 @@ void physics(void)
         }
     }
     //Jump Functionality - Nicklas Chiang
-    ball_jump();
+    for (int i=0; i<20; i++){
+        if (gl.keys[XK_space]){
+            updateJump();
+        }
+    }
     
     if (gl.exp44.onoff) {
         //explosion is happening
