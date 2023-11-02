@@ -554,23 +554,41 @@ int checkKeys(XEvent *e)
 {
     //keyboard input?
     static int shift=0;
+    static bool isShiftHeld = false;
     if (e->type != KeyPress && e->type != KeyRelease)
         //time_key_press(false);
         return 0;
     int key = XLookupKeysym(&e->xkey, 0);
     gl.keys[key]=1;
+
     if (e->type == KeyRelease) {
-        gl.keys[key]=0;
-        if (key == XK_Shift_L || key == XK_Shift_R)
-            shift=0;
+        gl.keys[key] = 0;
+        if (key == XK_Shift_L || key == XK_Shift_R) {
+            shift = 0;
+            isShiftHeld = false;
+        }
         return 0;
     }
-    gl.keys[key]=1;
+    gl.keys[key] = 1;
     if (key == XK_Shift_L || key == XK_Shift_R) {
-        shift=1;
+        shift = 1;
+        isShiftHeld = true;
         return 0;
     }
+    //-Sprint Functionality WORKING - Nicklas Chiang----
+    if (isShiftHeld) {
+        gl.delay = 0.002;
+    } else {
+        gl.delay = 0.05;
+    }
+    //--------------------------------------------------
     (void)shift;
+    //-Jump Functionality NOT WORKING-------------------
+    gl.keys[key]=1;
+    if (key == XK_space) {
+        jumping();
+    }
+    //--------------------------------------------------
     switch (key) {
         case XK_s:
             //screenCapture();
@@ -599,9 +617,6 @@ int checkKeys(XEvent *e)
             gl.exp44.pos[2] =   0.0;
             timers.recordTime(&gl.exp44.time);
             gl.exp44.onoff ^= 1;
-            break;
-        case XK_space:
-            jumping();
             break;
         case XK_Left:
             break;
@@ -665,11 +680,11 @@ void physics(void)
         }
         */
         //Sprint Functionality - Nicklas Chiang
-        for (int i=0; i<20; i++){
+        /*for (int i=0; i<20; i++){
             if (gl.keys[XK_Shift_L] || gl.keys[XK_Shift_R]){
                 gl.delay = 0.002;
             }
-        }
+        }*/
 
         for (int i=0; i<20; i++) {
             if (gl.keys[XK_Left] || gl.keys[XK_a]) {
