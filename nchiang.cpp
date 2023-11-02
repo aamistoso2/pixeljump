@@ -1,14 +1,35 @@
 // This is Nicklas Chiang's individual source file
 //
-#include "fonts.h"
-#include <GL/glx.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
 #include <time.h>
+#include <math.h>
+#include <X11/Xlib.h>
+#include <X11/keysym.h>
+#include <GL/glx.h>
+#include "log.h"
+#include "fonts.h"
+
+typedef double Vec[3];
 
 // ---------Sec Since Mouse Last Moved--------------------------
 static clock_t last_mouse_time;
 static clock_t current_time;
 static int first_time = 1;
 static double sec_elapsed;
+const float gravity = -0.2f;
+const float JUMP_VELOCITY = 0.5;
+
+class global{
+    public:
+    int isJumping = 0;
+    int jumpFrame = 0;
+    int maxJumpFrames = 15;
+    Vec ball_vel;
+
+}g;
 
 
 void display_name(int x, int y)
@@ -43,14 +64,26 @@ int get_last_mouse_movement(const bool get)
 }
 // -------------------------------------------------------------
 // ---------Implementation of the Jump Functionality------------
-int JUMP_VELOCITY = 0.02;
-void ball_jump(){
-    if (gl.keys[XK_space]) {
-        // Implement the jump functionality here
-        if (gl.ball_pos[1] == (Flt)hgt) {
-            // If on ground, allow to jump
-            gl.ball_vel[1] = JUMP_VELOCITY;
+void jumping() {
+    if (!g.isJumping) {
+        g.isJumping = true;
+        g.ball_vel[1] = JUMP_VELOCITY;
+    }
+}
+
+void updateJump() {
+    if (g.isJumping) {
+        if (g.jumpFrame < g.maxJumpFrames) {
+            // Apply jump strength for a certain number of frames
+            g.ball_vel[1] = JUMP_VELOCITY;
+            g.jumpFrame++;
+        } else {
+            g.isJumping = 0;
+            g.jumpFrame = 0;
         }
+    } else {
+        // Apply gravity to bring the character down
+        g.ball_vel[1] -= gravity;
     }
 }
 // -------------------------------------------------------------
