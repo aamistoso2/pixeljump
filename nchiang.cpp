@@ -65,8 +65,8 @@ int get_last_mouse_movement(const bool get)
 // -------------------------------------------------------------
 // ---------Implementation of the Jump Functionality------------
 void jumping() {
-    if (!g.isJumping) {
-        g.isJumping = true;
+    if (g.isJumping == 0) {
+        g.isJumping = 1;
         g.ball_vel[1] = JUMP_VELOCITY;
     }
 }
@@ -86,4 +86,4 @@ void updateJump() {
         g.ball_vel[1] -= gravity;
     }
 }
-// -------------------------------------------------------------
+
