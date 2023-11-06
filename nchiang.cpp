@@ -12,25 +12,37 @@
 #include "log.h"
 #include "fonts.h"
 
+class nchiang nc;
+
+//defined types
+typedef double Flt;
 typedef double Vec[3];
+typedef Flt	Matrix[4][4];
+
+//macros
+#define rnd() (((double)rand())/(double)RAND_MAX)
+#define random(a) (rand()%a)
+#define MakeVector(v, x, y, z) (v)[0]=(x),(v)[1]=(y),(v)[2]=(z)
+#define VecCopy(a,b) (b)[0]=(a)[0];(b)[1]=(a)[1];(b)[2]=(a)[2]
+#define VecDot(a,b)	((a)[0]*(b)[0]+(a)[1]*(b)[1]+(a)[2]*(b)[2])
+#define VecSub(a,b,c) (c)[0]=(a)[0]-(b)[0]; \
+                             (c)[1]=(a)[1]-(b)[1]; \
+(c)[2]=(a)[2]-(b)[2]
+//constants
+const float timeslice = 1.0f;
+const float gravity = -0.2f;
+#define ALPHA 1
+
+//Class from pixeljump.cpp
+extern class Global gl;
 
 // ---------Sec Since Mouse Last Moved--------------------------
 static clock_t last_mouse_time;
 static clock_t current_time;
 static int first_time = 1;
 static double sec_elapsed;
-const float gravity = -0.2f;
 const float JUMP_VELOCITY = 0.5;
-
-class global{
-    public:
-    int isJumping = 0;
-    int jumpFrame = 0;
-    int maxJumpFrames = 15;
-    Vec ball_vel;
-
-}g;
-
+static time_t startTime = time(nullptr);
 
 void display_name(int x, int y)
 {
@@ -86,4 +98,3 @@ void updateJump() {
         g.ball_vel[1] -= gravity;
     }
 }
-
