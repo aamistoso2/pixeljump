@@ -29,22 +29,9 @@
 #include "aamistoso.h"
 #include "usingh.h"
 #include "ailarde.h"
+#include "pixel.h"
 
 
-//defined types
-typedef double Flt;
-typedef double Vec[3];
-typedef Flt	Matrix[4][4];
-
-//macros
-#define rnd() (((double)rand())/(double)RAND_MAX)
-#define random(a) (rand()%a)
-#define MakeVector(v, x, y, z) (v)[0]=(x),(v)[1]=(y),(v)[2]=(z)
-#define VecCopy(a,b) (b)[0]=(a)[0];(b)[1]=(a)[1];(b)[2]=(a)[2]
-#define VecDot(a,b)	((a)[0]*(b)[0]+(a)[1]*(b)[1]+(a)[2]*(b)[2])
-#define VecSub(a,b,c) (c)[0]=(a)[0]-(b)[0]; \
-                             (c)[1]=(a)[1]-(b)[1]; \
-(c)[2]=(a)[2]-(b)[2]
 //constants
 const float timeslice = 1.0f;
 const float gravity = -0.2f;
@@ -83,80 +70,52 @@ class Timers {
 } timers;
 //-----------------------------------------------------------------------------
 
-class Image;
+Sprite::Sprite() {
+    onoff = 0;
+    frame = 0;
+    image = NULL;
+    delay = 0.1;
+}
 
-class Sprite {
-    public:
-        int onoff;
-        int frame;
-        double delay;
-        Vec pos;
-        Image *image;
-        GLuint tex;
-        struct timespec time;
-        Sprite() {
-            onoff = 0;
-            frame = 0;
-            image = NULL;
-            delay = 0.1;
-        }
-};
+Global::~Global() {
+    logClose();
+}
 
-class Global {
-    public:
-        unsigned char keys[65536];
-        int xres, yres;
-        int movie, movieStep;
-        int walk;
-        int walkFrame;
-        int isJumping = 0;
-        int jumpFrame = 0;
-        int maxJumpFrames = 15;
-        double delay;
-        int show_name;
-        int statistics = 0;
-        Image *walkImage;
-        GLuint walkTexture;
-        Vec box[20];
-        Sprite exp;
-        Sprite exp44;
-        Vec ball_pos;
-        Vec ball_vel;
-        //camera is centered at (0,0) lower-left of screen. 
-        Flt camera[2];
-        ~Global() {
-            logClose();
-        }
-        Global() {
-            logOpen();
-            camera[0] = camera[1] = 0.0;
-            movie=0;
-            movieStep=2;
-            xres=800;
-            yres=600;
-            walk=0;
-            walkFrame=0;
-            walkImage=NULL;
-            MakeVector(ball_pos, 520.0, 0, 0);
-            MakeVector(ball_vel, 0, 0, 0);
-            delay = 0.05;
-            show_name = 0;
-            exp.onoff=0;
-            exp.frame=0;
-            exp.image=NULL;
-            exp.delay = 0.02;
-            exp44.onoff=0;
-            exp44.frame=0;
-            exp44.image=NULL;
-            exp44.delay = 0.022;
-            for (int i=0; i<20; i++) {
-                box[i][0] = rnd() * xres;
-                box[i][1] = rnd() * (yres-220) + 220.0;
-                box[i][2] = 0.0;
-            }
-            memset(keys, 0, 65536);
-        }
-} gl;
+Global::Global() {
+    logOpen();
+    camera[0] = camera[1] = 0.0;
+    movie=0;
+    movieStep=2;
+    xres=800;
+    yres=600;
+    walk=0;
+    walkFrame=0;
+    isJumping = 0;
+    jumpFrame = 0;
+    maxJumpFrames = 15;
+    walkImage=NULL;
+    MakeVector(ball_pos, 520.0, 0, 0);
+    MakeVector(ball_vel, 0, 0, 0);
+    delay = 0.05;
+    show_name = 0;
+    statistics = 0;
+    exp.onoff=0;
+    exp.frame=0;
+    exp.image=NULL;
+    exp.delay = 0.02;
+    exp44.onoff=0;
+    exp44.frame=0;
+    exp44.image=NULL;
+    exp44.delay = 0.022;
+    for (int i=0; i<20; i++) {
+        box[i][0] = rnd() * xres;
+        box[i][1] = rnd() * (yres-220) + 220.0;
+        box[i][2] = 0.0;
+    }
+    memset(keys, 0, 65536);
+}
+
+Global gl;
 
 class Level {
     public:
