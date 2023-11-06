@@ -56,7 +56,6 @@ static clock_t last_mouse_time;
 static clock_t current_time;
 static int first_time = 1;
 static double sec_elapsed;
-const float gravity = -0.2f;
 const float JUMP_VELOCITY = 0.5;
 static time_t startTime = time(nullptr);
 
