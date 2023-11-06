@@ -11,8 +11,7 @@
 #include <GL/glx.h>
 #include "log.h"
 #include "fonts.h"
-
-class nchiang nc;
+#include "nchiang.h"
 
 //defined types
 typedef double Flt;
@@ -33,16 +32,15 @@ const float timeslice = 1.0f;
 const float gravity = -0.2f;
 #define ALPHA 1
 
-//Class from pixeljump.cpp
-extern class Global gl;
+class global{
+    public:
+    int isJumping = 0;
+    int jumpFrame = 0;
+    int maxJumpFrames = 15;
+    Vec ball_vel;
 
-// ---------Sec Since Mouse Last Moved--------------------------
-static clock_t last_mouse_time;
-static clock_t current_time;
-static int first_time = 1;
-static double sec_elapsed;
-const float JUMP_VELOCITY = 0.5;
-static time_t startTime = time(nullptr);
+}g;
+
 
 void display_name(int x, int y)
 {
@@ -52,6 +50,15 @@ void display_name(int x, int y)
     r.center = 0;
     ggprint8b(&r, 0x00ffff00, 0, "Nicklas");
 }
+
+// ---------Sec Since Mouse Last Moved--------------------------
+static clock_t last_mouse_time;
+static clock_t current_time;
+static int first_time = 1;
+static double sec_elapsed;
+const float gravity = -0.2f;
+const float JUMP_VELOCITY = 0.5;
+static time_t startTime = time(nullptr);
 
 int get_last_mouse_movement(const bool get)
 {
