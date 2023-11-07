@@ -96,7 +96,7 @@ Global::Global() {
     walkImage=NULL;
     MakeVector(ball_pos, 520.0, 0, 0);
     MakeVector(ball_vel, 0, 0, 0);
-    delay = 0.05;
+    delay = 0.02;
     show_name = 0;
     statistics = 0;
     exp.onoff=0;
@@ -536,13 +536,13 @@ int checkKeys(XEvent *e)
     }
     //-Sprint Functionality WORKING - Nicklas Chiang----
     if (isShiftHeld) {
-        gl.delay = 0.002;
+        gl.delay = 0.010;
     } else {
-        gl.delay = 0.05;
+        gl.delay = 0.025;
     }
     //--------------------------------------------------
     (void)shift;
-    //-Jump Functionality NOT WORKING-------------------
+    //-Jump Functionality Working!-------------------
     gl.keys[key]=1;
     if (key == XK_space) {
         jumping();
