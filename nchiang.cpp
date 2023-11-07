@@ -11,7 +11,10 @@
 #include <GL/glx.h>
 #include "log.h"
 #include "fonts.h"
+#include "pixel.h"
 #include "nchiang.h"
+/*
+
 
 //defined types
 typedef double Flt;
@@ -28,10 +31,17 @@ typedef Flt	Matrix[4][4];
                              (c)[1]=(a)[1]-(b)[1]; \
 (c)[2]=(a)[2]-(b)[2]
 //constants
+*/
+
 const float timeslice = 1.0f;
 const float gravity = -0.2f;
 #define ALPHA 1
 
+
+
+//Class from pixeljump.cpp
+extern Global gl;
+/*=======
 class global{
     public:
     int isJumping = 0;
@@ -39,7 +49,7 @@ class global{
     int maxJumpFrames = 15;
     Vec ball_vel;
 
-}g;
+}g; */
 
 
 void display_name(int x, int y)
@@ -83,24 +93,24 @@ int get_last_mouse_movement(const bool get)
 // -------------------------------------------------------------
 // ---------Implementation of the Jump Functionality------------
 void jumping() {
-    if (g.isJumping == 0) {
-        g.isJumping = 1;
-        g.ball_vel[1] = JUMP_VELOCITY;
+    if (gl.isJumping == 0) {
+        gl.isJumping = 1;
+        gl.ball_vel[1] = JUMP_VELOCITY;
     }
 }
 
 void updateJump() {
-    if (g.isJumping) {
-        if (g.jumpFrame < g.maxJumpFrames) {
+    if (gl.isJumping) {
+        if (gl.jumpFrame < gl.maxJumpFrames) {
             // Apply jump strength for a certain number of frames
-            g.ball_vel[1] = JUMP_VELOCITY;
-            g.jumpFrame++;
+            gl.ball_vel[1] = JUMP_VELOCITY;
+            gl.jumpFrame++;
         } else {
-            g.isJumping = 0;
-            g.jumpFrame = 0;
+            gl.isJumping = 0;
+            gl.jumpFrame = 0;
         }
     } else {
         // Apply gravity to bring the character down
-        g.ball_vel[1] -= gravity;
+        gl.ball_vel[1] -= gravity;
     }
 }
