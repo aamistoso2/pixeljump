@@ -40,6 +40,9 @@ class Global {
         int isJumping;
         int jumpFrame;
         int maxJumpFrames;
+        float max_hp;
+        float hp;
+        float current_hp;
         double delay;
         int show_name;
         int statistics;
