@@ -18,6 +18,7 @@
 #include <unistd.h>
 #include <time.h>
 #include <math.h>
+#include <string.h>
 #include <X11/Xlib.h>
 #include <X11/keysym.h>
 #include <GL/glx.h>
@@ -93,6 +94,7 @@ Global::Global() {
     isJumping = 0;
     jumpFrame = 0;
     maxJumpFrames = 15;
+    float hp = 100.0;
     walkImage=NULL;
     MakeVector(ball_pos, 520.0, 0, 0);
     MakeVector(ball_vel, 0, 0, 0);
@@ -182,7 +184,7 @@ class X11_wrapper {
         void setTitle() {
             //Set the window title bar.
             XMapWindow(dpy, win);
-            XStoreName(dpy, win, "3350 - Walk Cycle");
+            XStoreName(dpy, win, "PixelJump");
         }
         void setupScreenRes(const int w, const int h) {
             gl.xres = w;
@@ -312,6 +314,7 @@ Image img[3] = {
 
 int main(void)
 {
+    check_health(g.hp);
     initOpengl();
     init();
     int done = 0;
@@ -323,9 +326,32 @@ int main(void)
             checkMouse(&e);
             done = checkKeys(&e);
         }
-        physics();
-        render();
-        x11.swapBuffers();
+        //Changing between Screens
+        /*switch (screens()) {
+            case startup: 
+                {
+                    startup();
+                    break;
+                }
+            case play_game: 
+                {
+                    physics();
+                    render();
+                    x11.swapBuffers();
+                    break;
+                }
+            case credits: 
+                {
+                    credits();
+                    break;
+                }
+            case endgame: 
+                {
+                    endgame();
+                    break;
+                }
+
+        }*/
     }
     cleanup_fonts();
     return 0;

@@ -6,6 +6,7 @@
 #include <unistd.h>
 #include <time.h>
 #include <math.h>
+#include <string.h>
 #include <X11/Xlib.h>
 #include <X11/keysym.h>
 #include <GL/glx.h>
@@ -52,7 +53,8 @@ int get_last_mouse_movement(const bool get)
 
     if (get){
         current_time = clock();
-        sec_elapsed += (double)(current_time - last_mouse_time) / CLOCKS_PER_SEC;
+        sec_elapsed += 
+            (double)(current_time - last_mouse_time) / CLOCKS_PER_SEC;
         last_mouse_time = current_time;
         return sec_elapsed;
     }
@@ -81,5 +83,79 @@ void updateJump() {
     } else {
         // Apply gravity to bring the character down
         gl.ball_vel[1] -= gravity;
+    }
+}
+
+//Potentially HUD
+
+//Might need to fix window resolution-----------------------
+
+void startup() 
+{
+    //code to print menu and title
+}
+
+
+//Game Over Screen -----------------------------
+void endgame()
+{
+    //Code for the game over 
+}
+
+//Credits screen --------------------------------
+void credits()
+{
+    string name = "Pixels:";
+    //Shade of purple
+    float color[3] = {0.682f, 0.0f, 1.0f};
+    float top_left[2];
+    top_left[0] = 0.0f;
+    //Center vertical line
+    top_left[1] = gl.yres / 2;
+    draw_text(top_left, gl.xres, gl.yres/4, gl.xres/15, gl.yres/15, color, 
+                                                                    name);
+    //color[0] = ;
+    //color[1] = ;
+    //color[2] = ;
+
+    // Aldrin
+    top_left[1] = gl.yres / 2 - gl.yres/6;
+    name = "Aldrin Amistoso";
+    draw_text(top_left, gl.xres, gl.yres/6, gl.xres/25, gl.yres/25, color, 
+                                                                    name);
+
+    // Nicklas
+    top_left[1] = gl.yres / 2 - (gl.yres/6 + gl.yres/25);
+    name = "Nicklas Chiang";
+    draw_text(top_left, gl.xres, gl.yres/6, gl.xres/25, gl.yres/25, color, 
+                                                                    name);
+
+    // Adam
+    top_left[1] = gl.yres / 2 - (gl.yres/6 + 2 * gl.yres/25);
+    name = "Adam Ilarde";
+    draw_text(top_left, gl.xres, gl.yres/6, gl.xres/25, gl.yres/25, color, 
+                                                                    name);
+
+    // Daniel
+    top_left[1] = gl.yres / 2 - (gl.yres/6 + 3 * gl.yres/25);
+    name = "Daniel Lopez";
+    draw_text(top_left, gl.xres, gl.yres/6, gl.xres/25, gl.yres/25, color, 
+                                                                    name);
+
+    // Udai
+    top_left[1] = gl.yres / 2 - (gl.yres/6 + 4 * gl.yres/25);
+    name = "Udai Singh";
+    draw_text(top_left, gl.xres, gl.yres/6, gl.xres/25, gl.yres/25, color, 
+                                                                    name);
+}
+// -----------------------------------------------------------------------
+
+// Player health, if hp drops to 0, show endgame screen
+void check_hp(int g.hp)
+{
+    if (g.hp <= 0) {
+        screens(endgame);
+    } else {
+        g.hp = g.current_hp;
     }
 }
