@@ -94,7 +94,7 @@ Global::Global() {
     isJumping = 0;
     jumpFrame = 0;
     maxJumpFrames = 15;
-    float hp = 100.0;
+    //float hp = 100.0;
     walkImage=NULL;
     MakeVector(ball_pos, 520.0, 0, 0);
     MakeVector(ball_vel, 0, 0, 0);
@@ -314,7 +314,7 @@ Image img[3] = {
 
 int main(void)
 {
-    check_health(g.hp);
+    //check_health(gl.hp);
     initOpengl();
     init();
     int done = 0;
