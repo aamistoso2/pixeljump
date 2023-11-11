@@ -15,6 +15,8 @@
 #include "pixel.h"
 #include "nchiang.h"
 
+using namespace std;
+
 const float timeslice = 1.0f;
 const float gravity = -0.2f;
 #define ALPHA 1
@@ -103,7 +105,7 @@ void endgame()
 }
 
 //Credits screen --------------------------------
-void credits()
+/*void credits()
 {
     string name = "Pixels:";
     //Shade of purple
@@ -147,7 +149,7 @@ void credits()
     name = "Udai Singh";
     draw_text(top_left, gl.xres, gl.yres/6, gl.xres/25, gl.yres/25, color, 
                                                                     name);
-}
+}*/
 // -----------------------------------------------------------------------
 
 // Player health, if hp drops to 0, show endgame screen
