@@ -15,9 +15,9 @@ extern void jumping();
 extern void updateJump();
 
 //Screens
-extern void startup();
-extern void credits();
-extern void endgame();
-extern void check_hp(int g.hp);
+//extern void startup();
+//extern void credits();
+//extern void endgame();
+extern void check_hp(int hp);
 
 #endif
