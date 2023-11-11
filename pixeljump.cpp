@@ -314,7 +314,7 @@ Image img[3] = {
 
 int main(void)
 {
-    //check_health(gl.hp);
+    //check_hp(gl.hp);
     initOpengl();
     init();
     int done = 0;
