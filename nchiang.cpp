@@ -153,11 +153,11 @@ void endgame()
 // -----------------------------------------------------------------------
 
 // Player health, if hp drops to 0, show endgame screen
-void check_hp(int g.hp)
+/*void check_hp(int g.hp)
 {
-    if (g.hp <= 0) {
+    if (hp <= 0) {
         screens(endgame);
     } else {
-        g.hp = g.current_hp;
+        hp = gl.current_hp;
     }
-}
+}*/
