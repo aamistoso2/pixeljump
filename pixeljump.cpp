@@ -326,6 +326,9 @@ int main(void)
             checkMouse(&e);
             done = checkKeys(&e);
         }
+        physics();
+        render();
+        x11.swapBuffers();
         //Changing between Screens
         /*switch (screens()) {
             case startup: 
