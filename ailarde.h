@@ -6,6 +6,7 @@
 
 extern int time_key_press(const bool yes);
 extern void showCoins(int, int);
+extern void showSpikes(int, int, float);
 
 #endif
 

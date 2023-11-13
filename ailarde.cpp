@@ -20,8 +20,8 @@
 
 //CLASS EXAMPLE--------------------------------------
 /*
-   void display_border(int xres, int yres)
-   {
+void display_border(int xres, int yres)
+{
 //draw a border around the window
 int b = 50;
 glColor3f(1.0f, 1.0f, 0.0f);
@@ -78,6 +78,21 @@ void showCoins(int x, int y)
 
 //----------------------------------------------------
 
+//SPIKES
+//----------------------------------------------------
+void showSpikes(int x, int y, float size)
+{
+    glColor3f(1.0, 0.0, 0.0);
+
+    glBegin(GL_TRIANGLES);
+
+    glVertex2f(x, y+size);
+    glVertex2f(x-size, y-size);
+    glVertex3f(x+size, y-size);
+
+    glEnd();
+}
+//----------------------------------------------------
 
 //----------------------------------------------------
 //LAB 9
@@ -136,5 +151,4 @@ int time_key_press(const bool get2)
     return 0;
 
 }
-
 //----------------------------------------------------
