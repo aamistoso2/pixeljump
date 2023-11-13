@@ -88,7 +88,7 @@ void showSpikes(int x, int y, float size)
 
     glVertex2f(x, y+size);
     glVertex2f(x-size, y-size);
-    glVertex3f(x+size, y-size);
+    glVertex2f(x+size, y-size);
 
     glEnd();
 }
