@@ -866,7 +866,7 @@ void render(void)
 
                 //int circleX = 600;
                 //int circleY = 300;
-                showCoins(tx, ty);
+                //showCoins(tx, ty);
 
                 glColor3f(0.9, 0.2, 0.2);
                 glPushMatrix();
@@ -884,6 +884,7 @@ void render(void)
 
 
         }
+
         col = (col+1) % lev.ncols;
     }
 
