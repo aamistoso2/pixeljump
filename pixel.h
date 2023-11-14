@@ -59,4 +59,21 @@ class Global {
         Global();
 };
 
+class X11_wrapper {
+    private:
+        Display *dpy;
+        Window win;
+    public:
+        ~X11_wrapper();
+        void setTitle();
+        void setupScreenRes(const int w, const int h);
+        X11_wrapper();
+        void reshapeWindow(int width, int height);
+        void checkResize(XEvent *e);
+        bool getXPending();
+        XEvent getXNextEvent();
+        void swapBuffers();
+};
+
+
 #endif

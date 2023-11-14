@@ -172,84 +172,80 @@ class Level {
 } lev;
 
 //X Windows variables
-class X11_wrapper {
-    private:
-        Display *dpy;
-        Window win;
-    public:
-        ~X11_wrapper() {
-            XDestroyWindow(dpy, win);
-            XCloseDisplay(dpy);
-        }
-        void setTitle() {
-            //Set the window title bar.
-            XMapWindow(dpy, win);
-            XStoreName(dpy, win, "PixelJump");
-        }
-        void setupScreenRes(const int w, const int h) {
-            gl.xres = w;
-            gl.yres = h;
-        }
-        X11_wrapper() {
-            GLint att[] = { GLX_RGBA, GLX_DEPTH_SIZE, 24, GLX_DOUBLEBUFFER, None };
-            //GLint att[] = { GLX_RGBA, GLX_DEPTH_SIZE, 24, None };
-            XSetWindowAttributes swa;
-            setupScreenRes(gl.xres, gl.yres);
-            dpy = XOpenDisplay(NULL);
-            if (dpy == NULL) {
-                printf("\n\tcannot connect to X server\n\n");
-                exit(EXIT_FAILURE);
-            }
-            Window root = DefaultRootWindow(dpy);
-            XVisualInfo *vi = glXChooseVisual(dpy, 0, att);
-            if (vi == NULL) {
-                printf("\n\tno appropriate visual found\n\n");
-                exit(EXIT_FAILURE);
-            } 
-            Colormap cmap = XCreateColormap(dpy, root, vi->visual, AllocNone);
-            swa.colormap = cmap;
-            swa.event_mask = ExposureMask | KeyPressMask | KeyReleaseMask |
-                PointerMotionMask | MotionNotify | ButtonPress | ButtonRelease |
-                StructureNotifyMask | SubstructureNotifyMask;
-            win = XCreateWindow(dpy, root, 0, 0, gl.xres, gl.yres, 0,
-                    vi->depth, InputOutput, vi->visual,
-                    CWColormap | CWEventMask, &swa);
-            GLXContext glc = glXCreateContext(dpy, vi, NULL, GL_TRUE);
-            glXMakeCurrent(dpy, win, glc);
-            setTitle();
-        }
-        void reshapeWindow(int width, int height) {
-            //window has been resized.
-            setupScreenRes(width, height);
-            glViewport(0, 0, (GLint)width, (GLint)height);
-            glMatrixMode(GL_PROJECTION); glLoadIdentity();
-            glMatrixMode(GL_MODELVIEW); glLoadIdentity();
-            glOrtho(0, gl.xres, 0, gl.yres, -1, 1);
-            setTitle();
-        }
-        void checkResize(XEvent *e) {
-            //The ConfigureNotify is sent by the
-            //server if the window is resized.
-            if (e->type != ConfigureNotify)
-                return;
-            XConfigureEvent xce = e->xconfigure;
-            if (xce.width != gl.xres || xce.height != gl.yres) {
-                //Window size did change.
-                reshapeWindow(xce.width, xce.height);
-            }
-        }
-        bool getXPending() {
-            return XPending(dpy);
-        }
-        XEvent getXNextEvent() {
-            XEvent e;
-            XNextEvent(dpy, &e);
-            return e;
-        }
-        void swapBuffers() {
-            glXSwapBuffers(dpy, win);
-        }
-} x11;
+
+X11_wrapper::~X11_wrapper() {
+    XDestroyWindow(dpy, win);
+    XCloseDisplay(dpy);
+}
+void X11_wrapper::setTitle() {
+    //Set the window title bar.
+    XMapWindow(dpy, win);
+    XStoreName(dpy, win, "PixelJump");
+}
+void X11_wrapper::setupScreenRes(const int w, const int h) {
+    gl.xres = w;
+    gl.yres = h;
+}
+X11_wrapper::X11_wrapper() {
+    GLint att[] = { GLX_RGBA, GLX_DEPTH_SIZE, 24, GLX_DOUBLEBUFFER, None };
+    //GLint att[] = { GLX_RGBA, GLX_DEPTH_SIZE, 24, None };
+    XSetWindowAttributes swa;
+    setupScreenRes(gl.xres, gl.yres);
+    dpy = XOpenDisplay(NULL);
+    if (dpy == NULL) {
+        printf("\n\tcannot connect to X server\n\n");
+        exit(EXIT_FAILURE);
+    }
+    Window root = DefaultRootWindow(dpy);
+    XVisualInfo *vi = glXChooseVisual(dpy, 0, att);
+    if (vi == NULL) {
+        printf("\n\tno appropriate visual found\n\n");
+        exit(EXIT_FAILURE);
+    } 
+    Colormap cmap = XCreateColormap(dpy, root, vi->visual, AllocNone);
+    swa.colormap = cmap;
+    swa.event_mask = ExposureMask | KeyPressMask | KeyReleaseMask |
+        PointerMotionMask | MotionNotify | ButtonPress | ButtonRelease |
+        StructureNotifyMask | SubstructureNotifyMask;
+    win = XCreateWindow(dpy, root, 0, 0, gl.xres, gl.yres, 0,
+            vi->depth, InputOutput, vi->visual,
+            CWColormap | CWEventMask, &swa);
+    GLXContext glc = glXCreateContext(dpy, vi, NULL, GL_TRUE);
+    glXMakeCurrent(dpy, win, glc);
+    setTitle();
+}
+void X11_wrapper::reshapeWindow(int width, int height) {
+    //window has been resized.
+    setupScreenRes(width, height);
+    glViewport(0, 0, (GLint)width, (GLint)height);
+    glMatrixMode(GL_PROJECTION); glLoadIdentity();
+    glMatrixMode(GL_MODELVIEW); glLoadIdentity();
+    glOrtho(0, gl.xres, 0, gl.yres, -1, 1);
+    setTitle();
+}
+void X11_wrapper::checkResize(XEvent *e) {
+    //The ConfigureNotify is sent by the
+    //server if the window is resized.
+    if (e->type != ConfigureNotify)
+        return;
+    XConfigureEvent xce = e->xconfigure;
+    if (xce.width != gl.xres || xce.height != gl.yres) {
+        //Window size did change.
+        reshapeWindow(xce.width, xce.height);
+    }
+}
+bool X11_wrapper::getXPending() {
+    return XPending(dpy);
+}
+XEvent X11_wrapper::getXNextEvent() {
+    XEvent e;
+    XNextEvent(dpy, &e);
+    return e;
+}
+void X11_wrapper::swapBuffers() {
+    glXSwapBuffers(dpy, win);
+}
+X11_wrapper x11;
 
 class Image {
     public:
@@ -750,7 +746,7 @@ void physics(void)
             hgt = (lev.nrows-i) * lev.tilesize[1];
             break;
         }
-    }
+    }/*
     if (gl.ball_pos[1] < (Flt)hgt) {
         gl.ball_pos[1] = (Flt)hgt;
         MakeVector(gl.ball_vel, 0, 0, 0);
@@ -758,6 +754,14 @@ void physics(void)
         gl.ball_vel[1] -= 0.9;
     }
     gl.ball_pos[1] += gl.ball_vel[1];
+    */
+
+   if (((gl.ball_pos[1] - 10.0) < hgt) && (gl.ball_vel[1] <= 0.0)) {
+    gl.ball_vel[1] = 0.0;
+   } else {
+        gl.ball_vel[1] -= 0.9;
+   }
+   gl.ball_pos[1] += gl.ball_vel[1];
 }
 
 void render(void)
