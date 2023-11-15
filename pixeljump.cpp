@@ -32,7 +32,6 @@
 #include "ailarde.h"
 #include "pixel.h"
 
-
 //constants
 const float timeslice = 1.0f;
 const float gravity = -0.2f;
@@ -119,57 +118,52 @@ Global::Global() {
 
 Global gl;
 
-class Level {
-    public:
-        unsigned char arr[16][80];
-        int nrows, ncols;
-        int tilesize[2];
-        Flt ftsz[2];
-        Flt tile_base;
-        Level() {
-            //Log("Level constructor\n");
-            tilesize[0] = 32;
-            tilesize[1] = 32;
-            ftsz[0] = (Flt)tilesize[0];
-            ftsz[1] = (Flt)tilesize[1];
-            tile_base = 220.0;
-            //read level
-            FILE *fpi = fopen("level1.txt","r");
-            if (fpi) {
-                nrows=0;
-                char line[100];
-                while (fgets(line, 100, fpi) != NULL) {
-                    removeCrLf(line);
-                    int slen = strlen(line);
-                    ncols = slen;
-                    //Log("line: %s\n", line);
-                    for (int j=0; j<slen; j++) {
-                        arr[nrows][j] = line[j];
-                    }
-                    ++nrows;
+Level::Level() {
+    //Log("Level constructor\n");
+    tilesize[0] = 32;
+    tilesize[1] = 32;
+    ftsz[0] = (Flt)tilesize[0];
+    ftsz[1] = (Flt)tilesize[1];
+    tile_base = 220.0;
+    //read level
+    FILE *fpi = fopen("level1.txt","r");
+    if (fpi) {
+        nrows=0;
+        char line[100];
+        while (fgets(line, 100, fpi) != NULL) {
+            removeCrLf(line);
+            int slen = strlen(line);
+            ncols = slen;
+            //Log("line: %s\n", line);
+                for (int j=0; j<slen; j++) {
+                    arr[nrows][j] = line[j];
                 }
-                fclose(fpi);
-                //printf("nrows of background data: %i\n", nrows);
-            }
-            for (int i=0; i<nrows; i++) {
-                for (int j=0; j<ncols; j++) {
-                    printf("%c", arr[i][j]);
-                }
-                printf("\n");
-            }
+            ++nrows;
         }
-        void removeCrLf(char *str) {
-            //remove carriage return and linefeed from a Cstring
-            char *p = str;
-            while (*p) {
-                if (*p == 10 || *p == 13) {
-                    *p = '\0';
-                    break;
-                }
-                ++p;
-            }
+        fclose(fpi);
+        //printf("nrows of background data: %i\n", nrows);
+    }
+    for (int i=0; i<nrows; i++) {
+        for (int j=0; j<ncols; j++) {
+            printf("%c", arr[i][j]);
         }
-} lev;
+        printf("\n");
+    }
+}
+
+void Level::removeCrLf(char *str) {
+    //remove carriage return and linefeed from a Cstring
+    char *p = str;
+    while (*p) {
+        if (*p == 10 || *p == 13) {
+            *p = '\0';
+            break;
+        }
+        ++p;
+    }
+}
+
+Level lev;
 
 //X Windows variables
 
@@ -247,61 +241,59 @@ void X11_wrapper::swapBuffers() {
 }
 X11_wrapper x11;
 
-class Image {
-    public:
-        int width, height;
-        unsigned char *data;
-        ~Image() { delete [] data; }
-        Image(const char *fname) {
-            if (fname[0] == '\0')
-                return;
-            //printf("fname **%s**\n", fname);
-            int ppmFlag = 0;
-            char name[40];
-            strcpy(name, fname);
-            int slen = strlen(name);
-            char ppmname[80];
-            if (strncmp(name+(slen-4), ".ppm", 4) == 0)
-                ppmFlag = 1;
-            if (ppmFlag) {
-                strcpy(ppmname, name);
-            } else {
-                name[slen-4] = '\0';
-                //printf("name **%s**\n", name);
-                sprintf(ppmname,"%s.ppm", name);
-                //printf("ppmname **%s**\n", ppmname);
-                char ts[100];
-                //system("convert eball.jpg eball.ppm");
-                sprintf(ts, "convert %s %s", fname, ppmname);
-                system(ts);
-            }
-            //sprintf(ts, "%s", name);
-            //printf("read ppm **%s**\n", ppmname); fflush(stdout);
-            FILE *fpi = fopen(ppmname, "r");
-            if (fpi) {
-                char line[200];
-                fgets(line, 200, fpi);
-                fgets(line, 200, fpi);
-                //skip comments and blank lines
-                while (line[0] == '#' || strlen(line) < 2)
-                    fgets(line, 200, fpi);
-                sscanf(line, "%i %i", &width, &height);
-                fgets(line, 200, fpi);
-                //get pixel data
-                int n = width * height * 3;			
-                data = new unsigned char[n];			
-                for (int i=0; i<n; i++)
-                    data[i] = fgetc(fpi);
-                fclose(fpi);
-            } else {
-                printf("ERROR opening image: %s\n",ppmname);
-                exit(0);
-            }
-            if (!ppmFlag)
-                unlink(ppmname);
+Image::~Image() {
+     delete [] data;
+}
 
-        }
-};
+Image::Image(const char *fname) {
+    if (fname[0] == '\0')
+        return;
+    //printf("fname **%s**\n", fname);
+    int ppmFlag = 0;
+    char name[40];
+    strcpy(name, fname);
+    int slen = strlen(name);
+    char ppmname[80];
+    if (strncmp(name+(slen-4), ".ppm", 4) == 0)
+        ppmFlag = 1;
+    if (ppmFlag) {
+        strcpy(ppmname, name);
+    } else {
+        name[slen-4] = '\0';
+        //printf("name **%s**\n", name);
+        sprintf(ppmname,"%s.ppm", name);
+        //printf("ppmname **%s**\n", ppmname);
+        char ts[100];
+        //system("convert eball.jpg eball.ppm");
+        sprintf(ts, "convert %s %s", fname, ppmname);
+        system(ts);
+    }
+    //sprintf(ts, "%s", name);
+    //printf("read ppm **%s**\n", ppmname); fflush(stdout);
+    FILE *fpi = fopen(ppmname, "r");
+    if (fpi) {
+        char line[200];
+        fgets(line, 200, fpi);
+        fgets(line, 200, fpi);
+        //skip comments and blank lines
+        while (line[0] == '#' || strlen(line) < 2)
+            fgets(line, 200, fpi);
+        sscanf(line, "%i %i", &width, &height);
+        fgets(line, 200, fpi);
+        //get pixel data
+        int n = width * height * 3;			
+        data = new unsigned char[n];			
+        for (int i=0; i<n; i++)
+            data[i] = fgetc(fpi);
+        fclose(fpi);
+    } else {
+    printf("ERROR opening image: %s\n",ppmname);
+    exit(0);
+    }
+    if (!ppmFlag)
+    unlink(ppmname);
+}
+
 Image img[3] = {
     "./images/walk.gif",
     "./images/exp.png",
@@ -847,8 +839,6 @@ void render(void)
             //showCoins(circleX, circleY);
             //showCoins(tileCenterX, tileCenterY);
 
-
-            
             if (lev.arr[row][col] == 'w') {
                 glColor3f(0.8, 0.8, 0.6);
                 glPushMatrix();
@@ -1006,13 +996,11 @@ void render(void)
     r.left = 10;
     r.center = 0;
 
-
     if (gl.show_name) {
 
         display_border(gl.xres, gl.yres);
 
     }
-
 
     //ggprint8b(&r, 16, c, "W   Walk cycle");
     ggprint8b(&r, 16, c, "E   Explosion");
@@ -1059,10 +1047,3 @@ void render(void)
     }
 
 }
-
-
-
-
-
-
-
