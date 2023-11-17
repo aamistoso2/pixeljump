@@ -35,7 +35,7 @@
 //constants
 const float timeslice = 1.0f;
 const float gravity = -0.2f;
-#define ALPHA 1
+#define ALPHA 1;
 
 //function prototypes
 void initOpengl();
@@ -44,6 +44,7 @@ int checkKeys(XEvent *e);
 void init();
 void physics();
 void render();
+void play_game();
 
 //-----------------------------------------------------------------------------
 //Setup timers
@@ -93,13 +94,15 @@ Global::Global() {
     isJumping = 0;
     jumpFrame = 0;
     maxJumpFrames = 15;
-    //float hp = 100.0;
+    transitionTime = 2.0f; 
     walkImage=NULL;
     MakeVector(ball_pos, 520.0, 0, 0);
     MakeVector(ball_vel, 0, 0, 0);
     delay = 0.02;
     show_name = 0;
     statistics = 0;
+    show_credits = 0;
+    max_hp = 100;
     exp.onoff=0;
     exp.frame=0;
     exp.image=NULL;
@@ -302,49 +305,10 @@ Image img[3] = {
 
 int main(void)
 {
-    //check_hp(gl.hp);
     initOpengl();
     init();
-    int done = 0;
+    display_menu(); // Calls from nchiang.cpp for a main menu
 
-    while (!done) {
-        while (x11.getXPending()) {
-            XEvent e = x11.getXNextEvent();
-            x11.checkResize(&e);
-            checkMouse(&e);
-            done = checkKeys(&e);
-        }
-        physics();
-        render();
-        x11.swapBuffers();
-        //Changing between Screens
-        /*switch (screens()) {
-            case startup: 
-                {
-                    startup();
-                    break;
-                }
-            case play_game: 
-                {
-                    physics();
-                    render();
-                    x11.swapBuffers();
-                    break;
-                }
-            case credits: 
-                {
-                    credits();
-                    break;
-                }
-            case endgame: 
-                {
-                    endgame();
-                    break;
-                }
-
-        }*/
-    }
-    cleanup_fonts();
     return 0;
 }
 
@@ -490,6 +454,24 @@ void checkMouse(XEvent *e)
     }
 }
 
+//Added Play Game - Nicklas Chiang
+void play_game()
+{
+    int done = 0;
+    while (!done) {
+        while (x11.getXPending()) {
+            XEvent e = x11.getXNextEvent();
+            x11.checkResize(&e);
+            checkMouse(&e);
+            done = checkKeys(&e);
+        }
+        physics();
+        render();
+        x11.swapBuffers();
+    }
+    cleanup_fonts();
+}
+
 void screenCapture()
 {
     static int fnum = 0;
@@ -566,6 +548,13 @@ int checkKeys(XEvent *e)
     }
     //--------------------------------------------------
     switch (key) {
+        case XK_C:
+        case XK_c:
+            gl.show_credits ^= 1;
+            break;
+        case XK_R:
+        case XK_r:
+            break;
         case XK_s:
             //screenCapture();
             gl.statistics ^= 1;
@@ -752,8 +741,8 @@ void physics(void)
     gl.ball_vel[1] = 0.0;
    } else {
         gl.ball_vel[1] -= 0.9;
-   }
-   gl.ball_pos[1] += gl.ball_vel[1];
+    }
+    gl.ball_pos[1] += gl.ball_vel[1];
 }
 
 void render(void)
@@ -871,13 +860,12 @@ void render(void)
             }
             --row;
 
-
-
         }
 
         col = (col+1) % lev.ncols;
     }
 
+    //Ball ------------
     glColor3f(1.0, 1.0, 0.1);
     glPushMatrix();
     //put ball in its place
@@ -889,6 +877,7 @@ void render(void)
     glVertex2i( 10, 0);
     glEnd();
     glPopMatrix();
+
     //--------------------------------------
     //
     //#define SHOW_FAKE_SHADOW
@@ -991,7 +980,7 @@ void render(void)
         glBindTexture(GL_TEXTURE_2D, 0);
         glDisable(GL_ALPHA_TEST);
     }
-    unsigned int c = 0x00ffff44;
+    //unsigned int c = 0x00ffff44;
     r.bot = gl.yres - 20;
     r.left = 10;
     r.center = 0;
@@ -1001,6 +990,7 @@ void render(void)
         display_border(gl.xres, gl.yres);
 
     }
+
 
     //ggprint8b(&r, 16, c, "W   Walk cycle");
     ggprint8b(&r, 16, c, "E   Explosion");
@@ -1047,3 +1037,10 @@ void render(void)
     }
 
 }
+
+
+
+
+
+
+
