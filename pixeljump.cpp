@@ -32,6 +32,23 @@
 #include "ailarde.h"
 #include "pixel.h"
 
+//COINS - ADAM ILARDE
+#define MAX_COINS_X 3
+#define MAX_COINS_Y 3
+
+// Add these global variables
+int coinFixedX[MAX_COINS_X][MAX_COINS_Y] = {
+    {600, 650, 700},
+   // {800, 800, 900},
+   // {200, 300, 400}
+};
+
+int coinFixedY[MAX_COINS_X][MAX_COINS_Y] = {
+    {300, 250, 500},
+   // {400, 240, 200},
+   // {240, 290, 220}
+};
+
 //constants
 const float timeslice = 1.0f;
 const float gravity = -0.2f;
@@ -865,6 +882,19 @@ void render(void)
 
         col = (col+1) % lev.ncols;
     }
+
+      //COINS - ADAM ILARDE
+     for (int x = 0; x < MAX_COINS_X; x++) {
+        for (int y = 0; y < MAX_COINS_Y; y++) {
+            // Calculate new coordinates for each coin based on camera movement
+            int coinX = coinFixedX[x][y] - (int)gl.camera[0];
+            int coinY = coinFixedY[x][y];
+
+            // Display the coin at the updated position
+            showCoins(coinX, coinY);
+        }
+     }
+
 
     //Ball ------------
     glColor3f(1.0, 1.0, 0.1);
