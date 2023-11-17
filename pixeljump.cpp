@@ -741,8 +741,9 @@ void physics(void)
     gl.ball_vel[1] = 0.0;
    } else {
         gl.ball_vel[1] -= 0.9;
-    }
-    gl.ball_pos[1] += gl.ball_vel[1];
+   }
+   gl.ball_pos[1] += gl.ball_vel[1];
+
 }
 
 void render(void)
@@ -991,15 +992,11 @@ void render(void)
 
     }
 
+    //Calls from nchiang.cpp to display credits
+    if (gl.show_credits) {
+        display_credits();
+    }
 
-    //ggprint8b(&r, 16, c, "W   Walk cycle");
-    ggprint8b(&r, 16, c, "E   Explosion");
-    ggprint8b(&r, 16, c, "+   faster");
-    ggprint8b(&r, 16, c, "-   slower");
-    ggprint8b(&r, 16, c, "Shift -> run faster");
-    ggprint8b(&r, 16, c, "right arrow or 'D' -> walk right");
-    ggprint8b(&r, 16, c, "left arrow or 'A'  <- walk left");
-    ggprint8b(&r, 16, c, "frame: %i", gl.walkFrame);
     if (gl.movie) {
         screenCapture();
     }
@@ -1035,12 +1032,8 @@ void render(void)
         ggprint13(&r, 16, 0x00ffff00, "sec since key pressed: %i",
                  time_key_press(true));
     }
+    //Calls from nchiang.cpp to display hp on screen
+    gl.current_hp = 100;
+    display_hp(gl.current_hp, gl.max_hp); 
 
 }
-
-
-
-
-
-
-
