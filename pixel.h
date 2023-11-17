@@ -16,6 +16,8 @@ typedef Flt	Matrix[4][4];
                              (c)[1]=(a)[1]-(b)[1]; \
 (c)[2]=(a)[2]-(b)[2]
 
+extern void play_game();
+
 class Image;
 
 class Sprite {
@@ -41,11 +43,13 @@ class Global {
         int jumpFrame;
         int maxJumpFrames;
         float max_hp;
-        float hp;
         float current_hp;
+        double transitionTime;
+        double elapsedTime;
         double delay;
         int show_name;
         int statistics;
+        int show_credits;
         Image *walkImage;
         GLuint walkTexture;
         Vec box[20];
@@ -72,9 +76,10 @@ class Level {
 
 class X11_wrapper {
     private:
+    public:
         Display *dpy;
         Window win;
-    public:
+        GC gc;
         ~X11_wrapper();
         void setTitle();
         void setupScreenRes(const int w, const int h);
