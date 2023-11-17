@@ -59,4 +59,39 @@ class Global {
         Global();
 };
 
+class Level {
+    public:
+        unsigned char arr[16][80];
+        int nrows, ncols;
+        int tilesize[2];
+        Flt ftsz[2];
+        Flt tile_base;
+        Level();
+        void removeCrLf(char *str);
+};
+
+class X11_wrapper {
+    private:
+        Display *dpy;
+        Window win;
+    public:
+        ~X11_wrapper();
+        void setTitle();
+        void setupScreenRes(const int w, const int h);
+        X11_wrapper();
+        void reshapeWindow(int width, int height);
+        void checkResize(XEvent *e);
+        bool getXPending();
+        XEvent getXNextEvent();
+        void swapBuffers();
+};
+
+class Image {
+    public:
+        int width, height;
+        unsigned char *data;
+        ~Image();
+        Image(const char *fname);
+};
+
 #endif
