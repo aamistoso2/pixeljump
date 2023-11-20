@@ -69,10 +69,13 @@ class Timers {
     public:
         double physicsRate;
         double oobillion;
+        double timeSpan = 0.0;
+        double physicsCountdown = 0.0;
         struct timespec timeStart, timeEnd, timeCurrent;
         struct timespec walkTime;
+        struct timespec timePause;
         Timers() {
-            physicsRate = 1.0 / 30.0;
+            physicsRate = 1.0 / 60.0;
             oobillion = 1.0 / 1e9;
         }
         double timeDiff(struct timespec *start, struct timespec *end) {
@@ -113,7 +116,7 @@ Global::Global() {
     maxJumpFrames = 15;
     transitionTime = 2.0f; 
     walkImage=NULL;
-    MakeVector(ball_pos, 520.0, 0, 0);
+    MakeVector(ball_pos, 520.0, 65, 0);
     MakeVector(ball_vel, 0, 0, 0);
     delay = 0.02;
     show_name = 0;
@@ -475,6 +478,8 @@ void checkMouse(XEvent *e)
 void play_game()
 {
     int done = 0;
+    clock_gettime(CLOCK_REALTIME, &timers.timePause);
+    clock_gettime(CLOCK_REALTIME, &timers.timeStart);
     while (!done) {
         while (x11.getXPending()) {
             XEvent e = x11.getXNextEvent();
@@ -482,7 +487,15 @@ void play_game()
             checkMouse(&e);
             done = checkKeys(&e);
         }
-        physics();
+        clock_gettime(CLOCK_REALTIME, &timers.timeCurrent);
+        timers.timeSpan = timers.timeDiff(&timers.timeStart, &timers.timeCurrent);
+        timers.timeCopy(&timers.timeStart, &timers.timeCurrent);
+        timers.physicsCountdown += timers.timeSpan;
+        while (timers.physicsCountdown >= timers.physicsRate) {
+            physics();
+            timers.physicsCountdown -= timers.physicsRate;
+        }
+        //physics();
         render();
         x11.swapBuffers();
     }
@@ -670,13 +683,15 @@ void physics(void)
 
         for (int i=0; i<20; i++) {
             if (gl.keys[XK_Left] || gl.keys[XK_a]) {
+                //gl.ball_pos[0] -= 1.0f;
                 gl.box[i][0] += 1.0 * (0.05 / gl.delay);
                 if (gl.box[i][0] > gl.xres + 10.0)
                     gl.box[i][0] -= gl.xres + 10.0;
                 gl.camera[0] -= 2.0/lev.tilesize[0] * (0.05 / gl.delay);
                 if (gl.camera[0] < 0.0)
                     gl.camera[0] = 0.0;
-            } else if (gl.keys[XK_Right] || gl.keys[XK_d]){
+            } else if (gl.keys[XK_Right] || gl.keys[XK_d]) {
+                //gl.ball_pos[0] += 1.0f;
                 gl.box[i][0] -= 1.0 * (0.05 / gl.delay);
                 if (gl.box[i][0] < -10.0)
                     gl.box[i][0] += gl.xres + 10.0;
@@ -685,13 +700,16 @@ void physics(void)
                     gl.camera[0] = 0.0;
             }
         }
+        /*
         if (gl.exp.onoff) {
             gl.exp.pos[0] -= 2.0 * (0.05 / gl.delay);
         }
         if (gl.exp44.onoff) {
             gl.exp44.pos[0] -= 2.0 * (0.05 / gl.delay);
         }
+        */
     }
+    /*
     if (gl.exp.onoff) {
         //explosion is happening
         timers.recordTime(&timers.timeCurrent);
@@ -708,13 +726,15 @@ void physics(void)
             }
         }
     }
+    */
     //Jump Functionality - Nicklas Chiang
     for (int i=0; i<20; i++){
-        if (gl.keys[XK_space]){
+        if (gl.keys[XK_space]) {
             updateJump();
         }
     }
-    
+    gl.keys[XK_space] = 0;
+    /*
     if (gl.exp44.onoff) {
         //explosion is happening
         timers.recordTime(&timers.timeCurrent);
@@ -731,20 +751,51 @@ void physics(void)
             }
         }
     }
+    */
     //====================================
     //Adjust position of ball.
     //Height of highest tile when ball is?
     //====================================
-    Flt dd = lev.ftsz[0];
-    int col = (int)((gl.camera[0]+gl.ball_pos[0]) / dd);
+    Flt dd = lev.ftsz[0];                                     // x width for each block
+    int col = (int)((gl.camera[0] + gl.ball_pos[0]) / dd);    // finds the column that the block is on
+    int row = (int)((gl.camera[1] + gl.ball_pos[1]) / dd);    // finds the row that the block is on
     col = col % lev.ncols;
-    int hgt = 0;
-    for (int i=0; i<lev.nrows; i++) {
+    row = row % (lev.nrows + 1);
+    //printf("%d\n", row);
+    int floor = 0;
+    int cieling = 999999;
+    //int wallRight = 99999;
+    for (int i = lev.nrows - row; i < lev.nrows ; i++) {        // find the floor below the box
+        //printf("%d %d\n", i, col);
         if (lev.arr[i][col] != ' ') {
-            hgt = (lev.nrows-i) * lev.tilesize[1];
+            floor = (lev.nrows - i) * lev.tilesize[1];
+            //printf("%f\n", hgt / lev.ftsz[1]);
             break;
         }
-    }/*
+    }
+    for (int i = lev.nrows - row - 1; i >= 0 ; i--) {        // find the ceiling above the box
+        //printf("%d %d\n", i, col);
+        if (lev.arr[i][col] != ' ') {
+            cieling = (lev.nrows - i - 1) * lev.tilesize[1];
+            //printf("%f\n", hgt / lev.ftsz[1]);
+            break;
+        }
+    }
+/*
+    for (int i = col; i < lev.ncols; i++) {        // find the wall to the right
+        //printf("%d %d\n", i, col);
+        if (lev.arr[row][i] != ' ') {
+            wallRight = (col + i) * lev.tilesize[1];
+            //printf("%f\n", hgt / lev.ftsz[1]);
+            break;
+        }
+    }
+*/
+
+
+
+    //printf("%d %d\n", cieling, floor);
+    /*
     if (gl.ball_pos[1] < (Flt)hgt) {
         gl.ball_pos[1] = (Flt)hgt;
         MakeVector(gl.ball_vel, 0, 0, 0);
@@ -753,14 +804,20 @@ void physics(void)
     }
     gl.ball_pos[1] += gl.ball_vel[1];
     */
-
-   if (((gl.ball_pos[1] - 10.0) < hgt) && (gl.ball_vel[1] <= 0.0)) {
-    gl.ball_vel[1] = 0.0;
-   } else {
-        gl.ball_vel[1] -= 0.9;
-   }
-   gl.ball_pos[1] += gl.ball_vel[1];
-
+    //for (int i = 0; i < 10; i++) {
+    if (((gl.ball_pos[1] + 10.0f) > cieling) && (gl.ball_vel[1] >= 0.0f)) {
+        gl.ball_vel[1] = 0.0f;
+    }
+    if (((gl.ball_pos[1] - 10.0f) < floor) && (gl.ball_vel[1] <= 0.0f)) {
+        gl.ball_vel[1] = 0.0f;
+    } else {
+        if (gl.ball_vel[1] > -9.0f)
+            gl.ball_vel[1] -= 0.9f;
+    }
+    gl.ball_pos[1] += gl.ball_vel[1];
+    //if (gl.ball_vel[1] < 0.0f)
+    //    printf("%f\n", gl.ball_vel[1]);
+    //}
 }
 
 void render(void)
@@ -770,8 +827,8 @@ void render(void)
     //Clear the screen
     glClearColor(0.1, 0.1, 0.1, 1.0);
     glClear(GL_COLOR_BUFFER_BIT);
-    float cx = gl.xres/2.0;
-    float cy = gl.yres/2.0;
+    //float cx = gl.xres/2.0;
+    //float cy = gl.yres/2.0;
 
     /*
      * TOOK OUT GROUND - ADAM ILARDE
@@ -923,8 +980,8 @@ void render(void)
 #endif
     //
     //
-    float h = 200.0;
-    float w = h * 0.5;
+    //float h = 200.0;
+    //float w = h * 0.5;
     glPushMatrix();
     glColor3f(1.0, 1.0, 1.0);
     glBindTexture(GL_TEXTURE_2D, gl.walkTexture);
@@ -961,6 +1018,7 @@ void render(void)
     //--------------------------------------------------------------
     //
     //
+    /*
     if (gl.exp.onoff) {
         h = 80.0;
         w = 80.0;
@@ -985,6 +1043,7 @@ void render(void)
         glBindTexture(GL_TEXTURE_2D, 0);
         glDisable(GL_ALPHA_TEST);
     }
+    
     //
     //
     if (gl.exp44.onoff) {
@@ -1011,6 +1070,7 @@ void render(void)
         glBindTexture(GL_TEXTURE_2D, 0);
         glDisable(GL_ALPHA_TEST);
     }
+    */
     //unsigned int c = 0x00ffff44;
     r.bot = gl.yres - 20;
     r.left = 10;
