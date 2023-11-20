@@ -17,7 +17,7 @@
 using namespace std;
 
 const float timeslice = 1.0f;
-const float gravity = -0.2f;
+const float gravity = -0.05f;
 #define ALPHA 1;
 
 extern Global gl;
@@ -39,7 +39,7 @@ static clock_t last_mouse_time;
 static clock_t current_time;
 static int first_time = 1;
 static double sec_elapsed;
-const float JUMP_VELOCITY = 1.0;
+const float JUMP_VELOCITY = 15.0;
 static time_t startTime = time(nullptr);
 
 int get_last_mouse_movement(const bool get)
