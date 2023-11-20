@@ -12,5 +12,8 @@ int getRenderCount(const bool get);
 // Function to display the render statistics
 void displayRenderStats();
 
+// Function to change the background color
+void changeBackgroundColor(float r, float g, float b);
+
 #endif
 

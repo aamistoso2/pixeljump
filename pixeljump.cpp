@@ -819,14 +819,39 @@ void physics(void)
     //    printf("%f\n", gl.ball_vel[1]);
     //}
 }
+// Udai Singh
+// Changed background to a Starry Background
+// Render Counter Function
 
-void render(void)
-{
-    incrementRenderCount();
-    Rect r;
-    //Clear the screen
-    glClearColor(0.1, 0.1, 0.1, 1.0);
-    glClear(GL_COLOR_BUFFER_BIT);
+  void render(void) {
+      incrementRenderCount();
+      Rect r;
+
+      // Set the midnight sky color
+      float spaceR = 0.1f; // Dark space color
+      float spaceG = 0.1f;
+      float spaceB = 0.2f;
+      glClearColor(spaceR, spaceG, spaceB, 1.0); // Set the background colo     r to a dark blue
+      glClear(GL_COLOR_BUFFER_BIT);
+
+      // Initialize random seed
+      srand(time(NULL));
+
+      // Draw the stars
+     int numStars = 100; // Number of stars you want
+      glColor3f(1.0, 1.0, 1.0); // Set the star color to white
+      glPointSize(2.0); // Set the size of the stars
+      glBegin(GL_POINTS);
+      for (int i = 0; i < numStars; i++) {
+          float x = static_cast<float>(rand() % gl.xres);
+          float y = static_cast<float>(rand() % gl.yres);
+          glVertex2f(x, y);
+      }
+      glEnd();
+
+      // Restore the default color (if other drawing operations follow)
+      glColor3f(1.0, 1.0, 1.0);
+
     //float cx = gl.xres/2.0;
     //float cy = gl.yres/2.0;
 
