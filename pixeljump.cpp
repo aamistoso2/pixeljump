@@ -33,10 +33,9 @@
 #include "pixel.h"
 
 //COINS - ADAM ILARDE
-#define MAX_COINS_X 3
-#define MAX_COINS_Y 3
+#define MAX_COINS_X 12
+#define MAX_COINS_Y 12
 
-// Add these global variables
 int coinFixedX[MAX_COINS_X][MAX_COINS_Y] = {
     {600, 0, 900},
     {0, 1300, 1500},
@@ -48,6 +47,24 @@ int coinFixedY[MAX_COINS_X][MAX_COINS_Y] = {
     {0, 580, 400},
     {0, 500, 330}
 };
+
+//SPIKES - ADAM ILARDE
+#define MAX_SPIKES_X 12 
+#define MAX_SPIKES_Y 12
+
+int spikesFixedX[MAX_SPIKES_X][MAX_SPIKES_Y] = {
+    {800, 830, 0}, 
+    {1070, 1100, 1130}, 
+    {1500, 0, 0},
+      
+};
+
+int spikesFixedY[MAX_SPIKES_X][MAX_SPIKES_Y] = {
+    {390, 390, 0}, 
+    {451, 451, 451}, 
+    {518, 0, 0}  
+};
+
 
 //constants
 const float timeslice = 1.0f;
@@ -942,11 +959,6 @@ void physics(void)
                 glPopMatrix();
             }
             if (lev.arr[row][col] == 'b') {
-
-                //int circleX = 600;
-                //int circleY = 300;
-                //showCoins(tx, ty);
-
                 glColor3f(0.9, 0.2, 0.2);
                 glPushMatrix();
                 glTranslated((Flt)j*dd+offx, (Flt)i*lev.ftsz[1]+offy, 0);
@@ -976,6 +988,18 @@ void physics(void)
             showCoins(coinX, coinY);
         }
      }
+
+     //SPIKES - ADAM ILARDE
+     // Display spikes at different fixed positions on the terrain
+    for (int x = 0; x < MAX_SPIKES_X; x++) {
+        for (int y = 0; y < MAX_SPIKES_Y; y++) {
+            // Calculate new coordinates for each spike based on camera movement
+            int spikeX = spikesFixedX[x][y] - (int)gl.camera[0];
+            int spikeY = spikesFixedY[x][y];
+
+            showSpikes(spikeX, spikeY, 10.0);
+        }
+    }
 
 
     //Ball ------------
