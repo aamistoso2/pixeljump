@@ -6,8 +6,13 @@
 #include <GL/gl.h>
 #include <fstream>
 #include <sstream>
+#include <map>
 
 static int renderCount = 0;
+static std::map<std::string, std::string> configSettings;
+static float lastFrameTime = 0.0f;
+static float fps = 0.0f;
+
 void incrementRenderCount() {
     renderCount++;
 }
@@ -24,38 +29,17 @@ void displayRenderStats() {
     std::cout << "Render Function Calls: " << getRenderCount(true) << std::endl;
 }
 
-void displayExtendedRenderStats() {
-    // Extended render statistics
-    std::cout << "Render Function Calls: " << getRenderCount(true) << std::endl;
-    // Additional stats can be added here
-}
-
 void changeBackgroundColor(float r, float g, float b) {
-    // Set the clear color (background color) for OpenGL
-    glClearColor(r, g, b, 1.0f); // Alpha is set to 1.0 for opaque
-    glClear(GL_COLOR_BUFFER_BIT); // Clear the color buffer with the clear color
+    glClearColor(r, g, b, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
 }
 
 void logMessage(const std::string& message) {
-    // Logging messages with timestamp
     std::cout << "[LOG " << time(nullptr) << "]: " << message << std::endl;
 }
 
 void logError(const std::string& error) {
-    // Logging errors with timestamp
     std::cout << "[ERROR " << time(nullptr) << "]: " << error << std::endl;
-}
-
-void readConfig(const std::string& configFile) {
-    // Code to read configuration settings
-    std::cout << "Reading configuration from " << configFile << std::endl;
-    // Implement reading the configuration file here
-}
-
-void applyConfig() {
-    // Code to apply configuration settings
-    std::cout << "Applying configuration settings." << std::endl;
-    // Implement applying the configuration settings here
 }
 
 bool readConfiguration(const std::string& configFile, std::string& settings) {
@@ -78,9 +62,90 @@ void writeConfiguration(const std::string& configFile, const std::string& settin
     }
 }
 
+void parseConfig(const std::string& configFile) {
+    std::string line, key, value;
+    std::ifstream file(configFile);
+    if (file.is_open()) {
+        while (getline(file, line)) {
+            std::stringstream ss(line);
+            getline(ss, key, '=');
+            getline(ss, value);
+            configSettings[key] = value;
+        }
+        file.close();
+    }
+}
+
+std::string getConfigValue(const std::string& key) {
+    if (configSettings.find(key) != configSettings.end()) {
+        return configSettings[key];
+    }
+    return "";
+}
+
+void applyConfig() {
+    std::string bgColor = getConfigValue("backgroundColor");
+    if (!bgColor.empty()) {
+        float r, g, b;
+        std::stringstream ss(bgColor);
+        ss >> r >> g >> b;
+        changeBackgroundColor(r, g, b);
+    }
+}
+
 void updateRenderStats() {
     incrementRenderCount();
     displayRenderStats();
-    displayExtendedRenderStats();
+}
+
+void checkForErrors() {
+    GLenum err;
+    while ((err = glGetError()) != GL_NO_ERROR) {
+        std::cerr << "OpenGL error: " << err << std::endl;
+    }
+}
+
+void calculateFPS() {
+    static int frameCount = 0;
+    static float timeAccumulator = 0.0f;
+    float currentTime = static_cast<float>(clock()) / CLOCKS_PER_SEC;
+    float deltaTime = currentTime - lastFrameTime;
+    lastFrameTime = currentTime;
+
+    frameCount++;
+    timeAccumulator += deltaTime;
+
+    if (timeAccumulator >= 1.0f) {
+        fps = static_cast<float>(frameCount) / timeAccumulator;
+        frameCount = 0;
+        timeAccumulator -= 1.0f;
+    }
+}
+
+float getFPS() {
+    return fps;
+}
+
+void displayFrameTime() {
+    std::cout << "Frame Time: " << lastFrameTime << " seconds" << std::endl;
+}
+
+void startFrame() {
+    calculateFPS();
+}
+
+void endFrame() {
+    displayFrameTime();
+    checkForErrors();
+}
+
+void initializeOpenGLSettings() {
+    glEnable(GL_DEPTH_TEST);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+}
+
+void resizeWindow(int width, int height) {
+    glViewport(0, 0, width, height);
 }
 
