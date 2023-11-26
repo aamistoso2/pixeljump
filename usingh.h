@@ -4,7 +4,6 @@
 extern void display_border(int xres, int yres);
 
 void incrementRenderCount();
-
 // Function to get the current render count
 // If 'get' is true, it returns the render count; otherwise, it returns 0
 int getRenderCount(const bool get);

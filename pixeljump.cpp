@@ -31,7 +31,6 @@
 #include "usingh.h"
 #include "ailarde.h"
 #include "pixel.h"
-
 //COINS - ADAM ILARDE
 #define MAX_COINS_X 12
 #define MAX_COINS_Y 12
