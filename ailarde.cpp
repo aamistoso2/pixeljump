@@ -17,10 +17,11 @@
 #include "log.h"
 //#include "ppm.h"
 #include "fonts.h"
+#include <cmath>
 
 //CLASS EXAMPLE--------------------------------------
-/*
-void display_border(int xres, int yres)
+
+void displayBorder(int xres, int yres)
 {
 //draw a border around the window
 int b = 50;
@@ -42,7 +43,7 @@ glPopMatrix();
 }
 
 
-void display_name(int x, int y)
+void displayName(int x, int y)
 {
 //draw a border
 
@@ -53,7 +54,7 @@ r.center = 0;
 ggprint8b(&r, 0 , 0x00ffff00, "ailarde");
 }
 //----------------------------------------------------
-*/
+
 
 //----------------------------------------------------
 //coins
@@ -93,6 +94,7 @@ void showSpikes(int x, int y, float size)
     glEnd();
 }
 //----------------------------------------------------
+
 
 //----------------------------------------------------
 //LAB 9

@@ -1,6 +1,7 @@
 #ifndef PIXEL_HEADER
 #define PIXEL_HEADER
 
+
 //defined types
 typedef double Flt;
 typedef double Vec[3];
