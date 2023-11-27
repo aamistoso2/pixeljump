@@ -2,7 +2,24 @@
 //
 #include <iostream>
 #include <GL/glx.h>
+#include "aamistoso.h"  
+#include "pixel.h"
 using namespace std;
+
+extern Global gl;
+extern Level lev;
+#define MAX_COINS_X 6
+#define MAX_COINS_Y 6
+
+extern int coinFixedX[MAX_COINS_X][MAX_COINS_Y];
+extern int coinFixedY[MAX_COINS_X][MAX_COINS_Y];
+extern bool coinCollected[MAX_COINS_X][MAX_COINS_Y];
+
+int collectedCoins = 0;
+
+#define MAX_COINS_X 6
+#define MAX_COINS_Y 6
+
 void display_aldrin() {
     /*
     Rect r;
@@ -37,3 +54,27 @@ int total_physics_function_calls(const bool get)
         return -1;
     }
 }
+
+// Function for detecting coin collision
+void coinsCollection() {
+    // Collision detection for coins
+    for (int x = 0; x < MAX_COINS_X; x++) {
+        for (int y = 0; y < MAX_COINS_Y; y++) {
+            if (coinCollected[x][y]) 
+                continue; // Skip already collected coins
+
+            int coinX = coinFixedX[x][y] - (int)gl.camera[0];
+            int coinY = coinFixedY[x][y];
+
+            // Collision threshold
+            int collisionDist = 20;
+
+            if (abs(gl.ball_pos[0] - coinX) < collisionDist && abs(lev.tile_base + gl.ball_pos[1] - coinY) < collisionDist) {
+                coinCollected[x][y] = true;
+                collectedCoins += 1; // Increment coin count
+                cout << "Collected coins: " << collectedCoins << endl;
+            }
+        }
+    }
+}
+
