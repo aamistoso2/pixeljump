@@ -8,5 +8,6 @@ extern int time_key_press(const bool yes);
 extern void showCoins(int, int);
 extern void showSpikes(int, int, float);
 
+extern bool spikesDetection(int, int, int, int, float);
 #endif
 

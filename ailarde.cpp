@@ -19,8 +19,8 @@
 #include "fonts.h"
 #include <cmath>
 
-//CLASS EXAMPLE--------------------------------------
-
+//CLASS EXAMPLE
+//----------------------------------------------------
 void displayBorder(int xres, int yres)
 {
 //draw a border around the window
@@ -55,9 +55,8 @@ ggprint8b(&r, 0 , 0x00ffff00, "ailarde");
 }
 //----------------------------------------------------
 
-
+//COINS
 //----------------------------------------------------
-//coins
 void showCoins(int x, int y)
 {
     
@@ -95,10 +94,16 @@ void showSpikes(int x, int y, float size)
 }
 //----------------------------------------------------
 
-
+//SPIKE DETECTION
 //----------------------------------------------------
+bool spikesDetection(int x, int y, int spikeX, int spikeY, float spikeSize) {
+    return (x >= spikeX - spikeSize && x <= spikeX + spikeSize &&
+            y >= spikeY - spikeSize && y <= spikeY);
+}
+//----------------------------------------------------
+
 //LAB 9
-//
+//----------------------------------------------------
 static clock_t last_key_time;
 static clock_t timer;
 static int first = 1;
