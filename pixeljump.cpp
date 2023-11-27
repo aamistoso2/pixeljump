@@ -53,12 +53,12 @@ int coinFixedX[MAX_COINS_X][MAX_COINS_Y] = {
 
 int coinFixedY[MAX_COINS_X][MAX_COINS_Y] = {
     {330, 0, 550},
-    {0, 580, 400},
+    {0, 560, 400},
     {0, 500, 330},
 
     //second set
     {0, 0, 550},
-    {0, 580, 450},
+    {0, 560, 450},
     {550, 400, 500}
 
 };
