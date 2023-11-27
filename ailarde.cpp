@@ -62,7 +62,7 @@ void showCoins(int x, int y)
 {
     
     // Set the color to gold
-    glColor3f(1.0, 1.0, 1.0);
+    glColor3f(1.0, 0.843, 0.0);
 
     // Draw a small circle using OpenGL primitives
     glBegin(GL_TRIANGLE_FAN);
@@ -99,15 +99,14 @@ void showSpikes(int x, int y, float size)
 //----------------------------------------------------
 //LAB 9
 //
-
 static clock_t last_key_time;
 static clock_t timer;
 static int first = 1;
 static double time_passes;
 
-/*
-   int total_run_time(const bool get)
-   {
+
+int runTime(const bool get)
+{
 // static int first = 1;
 static int start;
 if (first)
@@ -121,7 +120,7 @@ return time(NULL) - start;
 }
 return 0;
 }
-*/
+
 
 
 int time_key_press(const bool get2)
