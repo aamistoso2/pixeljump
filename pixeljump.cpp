@@ -36,6 +36,9 @@
 #define MAX_COINS_X 6
 #define MAX_COINS_Y 6
 
+extern int collectedCoins;
+
+bool coinCollected[MAX_COINS_X][MAX_COINS_Y] = {0};
 int coinFixedX[MAX_COINS_X][MAX_COINS_Y] = {
     {600, 0, 900},
     {0, 1300, 1500},
@@ -719,6 +722,8 @@ Flt VecNormalize(Vec vec)
     return(len);
 }
 
+
+
 void physics(void)
 {
     total_physics_function_calls(false);
@@ -773,24 +778,9 @@ void physics(void)
         }
         */
     }
-    /*
-    if (gl.exp.onoff) {
-        //explosion is happening
-        timers.recordTime(&timers.timeCurrent);
-        double timeSpan = timers.timeDiff(&gl.exp.time, &timers.timeCurrent);
-        if (timeSpan > gl.exp.delay) {
-            //advance explosion frame
-            ++gl.exp.frame;
-            if (gl.exp.frame >= 23) {
-                //explosion is done.
-                gl.exp.onoff = 0;
-                gl.exp.frame = 0;
-            } else {
-                timers.recordTime(&gl.exp.time);
-            }
-        }
-    }
-    */
+
+    // Coins collection
+    coinsCollection();
     //Jump Functionality - Nicklas Chiang
     for (int i=0; i<20; i++){
         if (gl.keys[XK_space]) {
@@ -798,24 +788,7 @@ void physics(void)
         }
     }
     gl.keys[XK_space] = 0;
-    /*
-    if (gl.exp44.onoff) {
-        //explosion is happening
-        timers.recordTime(&timers.timeCurrent);
-        double timeSpan = timers.timeDiff(&gl.exp44.time, &timers.timeCurrent);
-        if (timeSpan > gl.exp44.delay) {
-            //advance explosion frame
-            ++gl.exp44.frame;
-            if (gl.exp44.frame >= 16) {
-                //explosion is done.
-                gl.exp44.onoff = 0;
-                gl.exp44.frame = 0;
-            } else {
-                timers.recordTime(&gl.exp44.time);
-            }
-        }
-    }
-    */
+    
     //====================================
     //Adjust position of ball.
     //Height of highest tile when ball is?
@@ -1028,6 +1001,9 @@ void physics(void)
      for (int x = 0; x < MAX_COINS_X; x++) {
         for (int y = 0; y < MAX_COINS_Y; y++) {
             // Calculate new coordinates for each coin based on camera movement
+            if (coinCollected[x][y]) {
+                continue; // Don't render collected coins
+            }
             int coinX = coinFixedX[x][y] - (int)gl.camera[0];
             int coinY = coinFixedY[x][y];
 
