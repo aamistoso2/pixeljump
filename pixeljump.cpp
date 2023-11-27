@@ -133,8 +133,9 @@ Global::Global() {
     maxJumpFrames = 15;
     transitionTime = 2.0f; 
     walkImage=NULL;
-    MakeVector(ball_pos, 520.0, 65, 0);
+    MakeVector(ball_pos, 520.0, 92, 0);
     MakeVector(ball_vel, 0, 0, 0);
+    current_hp = 100.0f;
     delay = 0.02;
     show_name = 0;
     statistics = 0;
@@ -675,126 +676,69 @@ Flt VecNormalize(Vec vec)
 void physics(void)
 {
     total_physics_function_calls(false);
-    if (gl.walk || gl.keys[XK_Right] || gl.keys[XK_Left] || gl.keys[XK_a] || gl.keys[XK_d]) {
-        //man is walking...
-        //when time is up, advance the frame.
-        //
-        /* DONT NEED MAN PHYSICS - ADAM ILARDE
-         * -------------------------------------------------------------------
-        timers.recordTime(&timers.timeCurrent);
-        double timeSpan = timers.timeDiff(&timers.walkTime, &timers.timeCurrent);
-        if (timeSpan > gl.delay) {
-            /advance
-            ++gl.walkFrame;
-            if (gl.walkFrame >= 16)
-                gl.walkFrame -= 16;
-            timers.recordTime(&timers.walkTime);
-        }
-        */
-        //Sprint Functionality - Nicklas Chiang
-        /*for (int i=0; i<20; i++){
-            if (gl.keys[XK_Shift_L] || gl.keys[XK_Shift_R]){
-                gl.delay = 0.002;
-            }
-        }*/
 
-        for (int i=0; i<20; i++) {
-            if (gl.keys[XK_Left] || gl.keys[XK_a]) {
-                //gl.ball_pos[0] -= 1.0f;
-                gl.box[i][0] += 1.0 * (0.05 / gl.delay);
-                if (gl.box[i][0] > gl.xres + 10.0)
-                    gl.box[i][0] -= gl.xres + 10.0;
-                gl.camera[0] -= 2.0/lev.tilesize[0] * (0.05 / gl.delay);
-                if (gl.camera[0] < 0.0)
-                    gl.camera[0] = 0.0;
-            } else if (gl.keys[XK_Right] || gl.keys[XK_d]) {
-                //gl.ball_pos[0] += 1.0f;
-                gl.box[i][0] -= 1.0 * (0.05 / gl.delay);
-                if (gl.box[i][0] < -10.0)
-                    gl.box[i][0] += gl.xres + 10.0;
-                gl.camera[0] += 2.0/lev.tilesize[0] * (0.05 / gl.delay);
-                if (gl.camera[0] < 0.0)
-                    gl.camera[0] = 0.0;
-            }
-        }
-        /*
-        if (gl.exp.onoff) {
-            gl.exp.pos[0] -= 2.0 * (0.05 / gl.delay);
-        }
-        if (gl.exp44.onoff) {
-            gl.exp44.pos[0] -= 2.0 * (0.05 / gl.delay);
-        }
-        */
-    }
-    /*
-    if (gl.exp.onoff) {
-        //explosion is happening
-        timers.recordTime(&timers.timeCurrent);
-        double timeSpan = timers.timeDiff(&gl.exp.time, &timers.timeCurrent);
-        if (timeSpan > gl.exp.delay) {
-            //advance explosion frame
-            ++gl.exp.frame;
-            if (gl.exp.frame >= 23) {
-                //explosion is done.
-                gl.exp.onoff = 0;
-                gl.exp.frame = 0;
-            } else {
-                timers.recordTime(&gl.exp.time);
-            }
-        }
-    }
-    */
-    //Jump Functionality - Nicklas Chiang
-    for (int i=0; i<20; i++){
-        if (gl.keys[XK_space]) {
-            updateJump();
-        }
-    }
-    gl.keys[XK_space] = 0;
-    /*
-    if (gl.exp44.onoff) {
-        //explosion is happening
-        timers.recordTime(&timers.timeCurrent);
-        double timeSpan = timers.timeDiff(&gl.exp44.time, &timers.timeCurrent);
-        if (timeSpan > gl.exp44.delay) {
-            //advance explosion frame
-            ++gl.exp44.frame;
-            if (gl.exp44.frame >= 16) {
-                //explosion is done.
-                gl.exp44.onoff = 0;
-                gl.exp44.frame = 0;
-            } else {
-                timers.recordTime(&gl.exp44.time);
-            }
-        }
-    }
-    */
-    //====================================
-    //Adjust position of ball.
-    //Height of highest tile when ball is?
-    //====================================
     Flt dd = lev.ftsz[0];                                     // x width for each block
     int col = (int)((gl.camera[0] + gl.ball_pos[0]) / dd);    // finds the column that the block is on
     int row = (int)((gl.camera[1] + gl.ball_pos[1]) / dd);    // finds the row that the block is on
     col = col % lev.ncols;
-    row = row % (lev.nrows + 1);
+    //row = row % (lev.nrows + 1);
+
+    if (gl.walk || gl.keys[XK_Right] || gl.keys[XK_Left] || gl.keys[XK_a] || gl.keys[XK_d]) {
+        for ( int i=0; i<20; i++ ) {
+            if ( gl.keys[XK_Left] || gl.keys[XK_a] ) {
+                //gl.ball_pos[0] -= 1.0f;
+                gl.box[i][0] += 1.0 * ( 0.05 / gl.delay );
+                if ( gl.box[i][0] > gl.xres + 10.0 )
+                    gl.box[i][0] -= gl.xres + 10.0;
+                gl.camera[0] -= 2.0/lev.tilesize[0] * ( 0.05 / gl.delay );
+                if ( gl.camera[0] < 0.0 )
+                    gl.camera[0] = 0.0;
+            
+            
+            
+            } else if ( gl.keys[XK_Right] || gl.keys[XK_d] ) {
+                //gl.ball_pos[0] += 1.0f;
+                gl.box[i][0] -= 1.0 * (0.05 / gl.delay);
+                if ( gl.box[i][0] < -10.0 )
+                    gl.box[i][0] += gl.xres + 10.0;
+                gl.camera[0] += 2.0/lev.tilesize[0] * ( 0.05 / gl.delay );
+                if ( gl.camera[0] < 0.0 )
+                    gl.camera[0] = 0.0;
+            }
+        }
+    }
+    //Jump Functionality - Nicklas Chiang
+    for ( int i=0; i<20; i++ ) {
+        if ( gl.keys[XK_space] ) {
+            updateJump();
+        }
+    }
+    gl.keys[XK_space] = 0;
+
+    //====================================
+    //Adjust position of ball.
+    //Height of highest tile when ball is?
+    //====================================
+    
     //printf("%d\n", row);
-    int floor = 0;
+    int floor = -999999;
     int cieling = 999999;
     //int wallRight = 99999;
     for (int i = lev.nrows - row; i < lev.nrows ; i++) {        // find the floor below the box
         //printf("%d %d\n", i, col);
-        if (lev.arr[i][col] != ' ') {
-            floor = (lev.nrows - i) * lev.tilesize[1];
+        //if (lev.arr[i][col] != ' ') {
+        if (lev.arr[i][col] == 'b' || lev.arr[i][col] == 'w') {
+            floor = ((lev.nrows - i) * lev.tilesize[1]);
             //printf("%f\n", hgt / lev.ftsz[1]);
             break;
         }
     }
     for (int i = lev.nrows - row - 1; i >= 0 ; i--) {        // find the ceiling above the box
         //printf("%d %d\n", i, col);
-        if (lev.arr[i][col] != ' ') {
+        //if (lev.arr[i][col] != ' ') {
+        if (lev.arr[i][col] == 'b' || lev.arr[i][col] == 'w') {
             cieling = (lev.nrows - i - 1) * lev.tilesize[1];
-            //printf("%f\n", hgt / lev.ftsz[1]);
+            //printf("%f\n", cieling / lev.ftsz[1]);
             break;
         }
     }
@@ -822,7 +766,7 @@ void physics(void)
     gl.ball_pos[1] += gl.ball_vel[1];
     */
     //for (int i = 0; i < 10; i++) {
-    if (((gl.ball_pos[1] + 10.0f) > cieling) && (gl.ball_vel[1] >= 0.0f)) {
+    if (((gl.ball_pos[1] + 24.0f) > cieling) && (gl.ball_vel[1] >= 0.0f)) {
         gl.ball_vel[1] = 0.0f;
     }
     if (((gl.ball_pos[1] - 10.0f) < floor) && (gl.ball_vel[1] <= 0.0f)) {
@@ -832,6 +776,8 @@ void physics(void)
             gl.ball_vel[1] -= 0.9f;
     }
     gl.ball_pos[1] += gl.ball_vel[1];
+    if (gl.ball_pos[1] < -256.0f)
+        gl.current_hp = 0.0f;
     //if (gl.ball_vel[1] < 0.0f)
     //    printf("%f\n", gl.ball_vel[1]);
     //}
@@ -840,7 +786,7 @@ void physics(void)
 // Changed background to a Starry Background
 // Render Counter Function
 
-  void render(void) {
+void render(void) {
       incrementRenderCount();
       Rect r;
 
@@ -978,7 +924,7 @@ void physics(void)
     }
 
       //COINS - ADAM ILARDE
-     for (int x = 0; x < MAX_COINS_X; x++) {
+    for (int x = 0; x < MAX_COINS_X; x++) {
         for (int y = 0; y < MAX_COINS_Y; y++) {
             // Calculate new coordinates for each coin based on camera movement
             int coinX = coinFixedX[x][y] - (int)gl.camera[0];
@@ -987,10 +933,10 @@ void physics(void)
             // Display the coin at the updated position
             showCoins(coinX, coinY);
         }
-     }
+    }
 
-     //SPIKES - ADAM ILARDE
-     // Display spikes at different fixed positions on the terrain
+    //SPIKES - ADAM ILARDE
+    // Display spikes at different fixed positions on the terrain
     for (int x = 0; x < MAX_SPIKES_X; x++) {
         for (int y = 0; y < MAX_SPIKES_Y; y++) {
             // Calculate new coordinates for each spike based on camera movement
@@ -1008,10 +954,10 @@ void physics(void)
     //put ball in its place
     glTranslated(gl.ball_pos[0], lev.tile_base+gl.ball_pos[1], 0);
     glBegin(GL_QUADS);
-    glVertex2i(-10, 0);
-    glVertex2i(-10, 20);
-    glVertex2i( 10, 20);
-    glVertex2i( 10, 0);
+        glVertex2i(-10, 0);
+        glVertex2i(-10, 20);
+        glVertex2i( 10, 20);
+        glVertex2i( 10, 0);
     glEnd();
     glPopMatrix();
 
@@ -1172,7 +1118,7 @@ void physics(void)
                  time_key_press(true));
     }
     //Calls from nchiang.cpp to display hp on screen
-    gl.current_hp = 100;
+    //gl.current_hp = 100;
     display_hp(gl.current_hp, gl.max_hp); 
 
 }
