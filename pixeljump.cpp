@@ -1005,7 +1005,16 @@ void render(void) {
             int spikeX = spikesFixedX[x][y] - (int)gl.camera[0];
             int spikeY = spikesFixedY[x][y];
 
-            showSpikes(spikeX, spikeY, 10.0);
+            //showSpikes(spikeX, spikeY, 10.0);
+
+            // Check if the player is colliding with spikes
+            if (spikesDetection(gl.ball_pos[0], lev.tile_base + gl.ball_pos[1], spikeX, spikeY, 10.0)) {
+                // Spike collision logic
+                gl.ball_pos[0] = 0;
+                gl.ball_pos[1] = 0;
+            } else {
+                // Display the spike at the updated position
+                showSpikes(spikeX, spikeY, 10.0);             }
         }
     }
 
