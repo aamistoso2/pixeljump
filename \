@@ -33,8 +33,8 @@
 #include "pixel.h"
 
 //COINS - ADAM ILARDE
-#define MAX_COINS_X 6
-#define MAX_COINS_Y 6
+#define MAX_COINS_X 50
+#define MAX_COINS_Y 50
 
 int coinFixedX[MAX_COINS_X][MAX_COINS_Y] = {
     {600, 0, 900},
@@ -61,31 +61,15 @@ int coinFixedY[MAX_COINS_X][MAX_COINS_Y] = {
 };
 
 //SPIKES - ADAM ILARDE
-#define MAX_SPIKES_X 12 
-#define MAX_SPIKES_Y 12
+#define MAX_SPIKES_X 50 
+#define MAX_SPIKES_Y 50
 
 int spikesFixedX[MAX_SPIKES_X][MAX_SPIKES_Y] = {
     {800, 830, 0}, 
     {1070, 1100, 1130}, 
     {1500, 0, 0},
     //the top of the 3 mini hills
-    //add 128 to the previous location
-    {1807, 1935, 2063},
-    {2191, 0, 0},
-    //last of cycle
-    {2620, 2650, 2680},
-
-    //second cycle
-    {3300, 3330, 0},
-    {3570, 3600, 3630},
-    //the bottom of the 3 mini hills
-    {4368, 4496, 4624},
-    //middle
-    {4800, 4830, 4860},
-    //last of cycle
-    {5100, 5200, 5230},
-
-
+    {1807, 1907, 0},
       
 };
 
@@ -94,22 +78,7 @@ int spikesFixedY[MAX_SPIKES_X][MAX_SPIKES_Y] = {
     {451, 451, 451}, 
     {518, 0, 0},
     //top of the 3 mini hills
-    {390, 390, 390},
-    {390, 0, 0},
-    //last of cycle
-    {422, 422, 422},
-    
-    //second cycle
-    {390, 390, 0},
-    {451, 451, 451},
-    //bottom of the 3 mini hills
-    {325, 325, 325},
-    //middle
-    {325, 325, 325},
-    //last of cycle
-    {422, 422, 422}
-
-
+    {390, 390, 390}
 };
 
 
