@@ -4,6 +4,12 @@
 #include <GL/glx.h>
 #include "aamistoso.h"  
 #include "pixel.h"
+#include <string.h>
+#include "log.h"
+#include "fonts.h"
+#include <AL/al.h>
+#include <AL/alc.h>
+#include <AL/alut.h>
 using namespace std;
 
 extern Global gl;
@@ -19,6 +25,8 @@ int collectedCoins = 0;
 
 #define MAX_COINS_X 6
 #define MAX_COINS_Y 6
+
+void playCollectSound();
 
 void display_aldrin() {
     /*
@@ -72,9 +80,29 @@ void coinsCollection() {
             if (abs(gl.ball_pos[0] - coinX) < collisionDist && abs(lev.tile_base + gl.ball_pos[1] - coinY) < collisionDist) {
                 coinCollected[x][y] = true;
                 collectedCoins += 1; // Increment coin count
-                cout << "Collected coins: " << collectedCoins << endl;
+                playCollectSound();
             }
         }
     }
+}
+
+void playCollectSound() {
+    // Load and play the "collect.wav" sound
+    ALuint buffer, source;
+    buffer = alutCreateBufferFromFile("collect.wav");
+    alGenSources(1, &source);
+    alSourcei(source, AL_BUFFER, buffer);
+    alSourcePlay(source);
+    
+}
+
+void display_coinsCollected() {
+    coinsCollection();
+    // Display collected coins at the top-left of the screen
+    Rect r;
+    r.bot = gl.yres - 20;
+    r.left = 10;
+    r.center = 0;
+    ggprint8b(&r, 16, 0xffff00, "Collected coins: %d", collectedCoins);
 }
 

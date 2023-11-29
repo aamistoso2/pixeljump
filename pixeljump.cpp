@@ -761,7 +761,7 @@ void physics(void)
     }
 
 
-    // Coins collection
+    // Call from aamistoso.cpp for coins collection functionality
     coinsCollection();
 
     //Jump Functionality - Nicklas Chiang
@@ -1188,6 +1188,8 @@ void render(void) {
         ggprint13(&r, 16, 0x00ffff00, "sec since key pressed: %i",
                  time_key_press(true));
     }
+    // Call from aamistoso.cpp to display coins collected on screen
+    display_coinsCollected();
     //Calls from nchiang.cpp to display hp on screen
     //gl.current_hp = 100;
     display_hp(gl.current_hp, gl.max_hp); 
