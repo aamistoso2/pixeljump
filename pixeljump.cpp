@@ -185,12 +185,12 @@ Global::Global() {
     walkImage=NULL;
     MakeVector(ball_pos, 520.0, 92, 0);
     MakeVector(ball_vel, 0, 0, 0);
-    current_hp = 100.0f;
+    current_hp = 200.0f;
     delay = 0.02;
     show_name = 0;
     statistics = 0;
     show_credits = 0;
-    max_hp = 100;
+    max_hp = 200;
     exp.onoff=0;
     exp.frame=0;
     exp.image=NULL;
@@ -1010,14 +1010,19 @@ void render(void) {
             // Check if the player is colliding with spikes
             if (spikesDetection(gl.ball_pos[0], lev.tile_base + gl.ball_pos[1], spikeX, spikeY, 10.0)) {
                 // Spike collision logic
-                //gl.ball_pos[0] = 0;
-                //gl.ball_pos[1] = 0;
-                gl.current_hp -= 10;
+                //gl.current_hp -= 25;
 
-            if (gl.current_hp <= 0) {
-                //gl.current_hp = 0;
-                display_game_over();
-            }
+                //if (gl.current_hp > 0) {
+                //    gl.current_hp -= 1;
+                //}
+
+                float decrease = 25;
+                gl.current_hp -= decrease;
+
+                if (gl.current_hp <= 0) {
+                    //gl.current_hp = 0;
+                    display_game_over();
+                }
 
             } else {
                 // Display the spike at the updated position
