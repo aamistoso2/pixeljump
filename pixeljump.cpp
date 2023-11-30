@@ -115,6 +115,10 @@ int spikesFixedY[MAX_SPIKES_X][MAX_SPIKES_Y] = {
 
 };
 
+//RESET COORDINATES
+int resetBallPosX = 250;
+int resetBallPosY = 300; 
+
 
 //constants
 const float timeslice = 1.0f;
@@ -652,6 +656,10 @@ int checkKeys(XEvent *e)
             break;
         case XK_R:
         case XK_r:
+            resetGame();
+            gl.ball_pos[0] = resetBallPosX;
+            gl.ball_pos[1] = resetBallPosY;
+            gl.current_hp = 200;
             break;
         case XK_s:
             //screenCapture();

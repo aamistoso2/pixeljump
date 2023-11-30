@@ -18,6 +18,7 @@
 //#include "ppm.h"
 #include "fonts.h"
 #include <cmath>
+//#include "pixeljump.cpp"
 
 //CLASS EXAMPLE
 //----------------------------------------------------
@@ -96,9 +97,20 @@ void showSpikes(int x, int y, float size)
 
 //SPIKE DETECTION
 //----------------------------------------------------
-bool spikesDetection(int x, int y, int spikeX, int spikeY, float spikeSize) {
+bool spikesDetection(int x, int y, int spikeX, int spikeY, float spikeSize) 
+{
     return (x >= spikeX - spikeSize && x <= spikeX + spikeSize &&
             y >= spikeY - spikeSize && y <= spikeY);
+}
+//----------------------------------------------------
+
+//GAME RESET
+//----------------------------------------------------
+void resetGame()
+{
+    //ball_pos[0] = 0.0;
+    //ball_pos[1] = 0.0;
+    printf("Game reset\n");
 }
 //----------------------------------------------------
 
