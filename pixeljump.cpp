@@ -1010,8 +1010,15 @@ void render(void) {
             // Check if the player is colliding with spikes
             if (spikesDetection(gl.ball_pos[0], lev.tile_base + gl.ball_pos[1], spikeX, spikeY, 10.0)) {
                 // Spike collision logic
-                gl.ball_pos[0] = 0;
-                gl.ball_pos[1] = 0;
+                //gl.ball_pos[0] = 0;
+                //gl.ball_pos[1] = 0;
+                gl.current_hp -= 10;
+
+            if (gl.current_hp <= 0) {
+                //gl.current_hp = 0;
+                display_game_over();
+            }
+
             } else {
                 // Display the spike at the updated position
                 showSpikes(spikeX, spikeY, 10.0);             }
