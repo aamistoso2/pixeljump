@@ -9,5 +9,7 @@ extern void showCoins(int, int);
 extern void showSpikes(int, int, float);
 
 extern bool spikesDetection(int, int, int, int, float);
+
+extern void resetGame();
 #endif
 
