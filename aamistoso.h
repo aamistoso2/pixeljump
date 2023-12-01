@@ -7,5 +7,8 @@ extern int total_physics_function_calls(const bool get);
 extern void coinsCollection();
 extern void playCollectedSound();
 extern void display_coinsCollected();
+
+//TO MAKE ADAM'S GAME RESET WORK
+extern int collectedCoins;
 #endif
 
