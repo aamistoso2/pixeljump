@@ -18,41 +18,41 @@
 //#include "ppm.h"
 #include "fonts.h"
 #include <cmath>
-//#include "pixeljump.cpp"
+#include "aamistoso.h"
 
 //CLASS EXAMPLE
 //----------------------------------------------------
 void displayBorder(int xres, int yres)
 {
-//draw a border around the window
-int b = 50;
-glColor3f(1.0f, 1.0f, 0.0f);
-glPushMatrix();
-glBegin(GL_TRIANGLE_STRIP);
-glVertex2i(0, 0);
-glVertex2i(0+b, 0+b);
-glVertex2i(0, 0+yres);
-glVertex2i(0, 0+yres-b);
-glVertex2i(xres, 0+yres);
-glVertex2i(xres-b, 0+yres-b);
-glVertex2i(xres, 0);
-glVertex2i(xres-b, b);
-glVertex2i(0, 0);
-glVertex2i(0+b, 0+b);
-glEnd();
-glPopMatrix();
+    //draw a border around the window
+    int b = 50;
+    glColor3f(1.0f, 1.0f, 0.0f);
+    glPushMatrix();
+    glBegin(GL_TRIANGLE_STRIP);
+    glVertex2i(0, 0);
+    glVertex2i(0+b, 0+b);
+    glVertex2i(0, 0+yres);
+    glVertex2i(0, 0+yres-b);
+    glVertex2i(xres, 0+yres);
+    glVertex2i(xres-b, 0+yres-b);
+    glVertex2i(xres, 0);
+    glVertex2i(xres-b, b);
+    glVertex2i(0, 0);
+    glVertex2i(0+b, 0+b);
+    glEnd();
+    glPopMatrix();
 }
 
 
 void displayName(int x, int y)
 {
-//draw a border
+    //draw a border
 
-Rect r;
-r.bot =y;
-r.left = x;
-r.center = 0;
-ggprint8b(&r, 0 , 0x00ffff00, "ailarde");
+    Rect r;
+    r.bot =y;
+    r.left = x;
+    r.center = 0;
+    ggprint8b(&r, 0 , 0x00ffff00, "ailarde");
 }
 //----------------------------------------------------
 
@@ -60,7 +60,6 @@ ggprint8b(&r, 0 , 0x00ffff00, "ailarde");
 //----------------------------------------------------
 void showCoins(int x, int y)
 {
-    
     // Set the color to gold
     glColor3f(1.0, 0.843, 0.0);
 
@@ -74,7 +73,6 @@ void showCoins(int x, int y)
         glVertex2f(x + radius * cos(angle), y + radius * sin(angle));
     }
     glEnd();
-
 }
 
 //----------------------------------------------------
@@ -83,6 +81,7 @@ void showCoins(int x, int y)
 //----------------------------------------------------
 void showSpikes(int x, int y, float size)
 {
+    //set color to red
     glColor3f(1.0, 0.0, 0.0);
 
     glBegin(GL_TRIANGLES);
@@ -108,8 +107,8 @@ bool spikesDetection(int x, int y, int spikeX, int spikeY, float spikeSize)
 //----------------------------------------------------
 void resetGame()
 {
-    //ball_pos[0] = 0.0;
-    //ball_pos[1] = 0.0;
+    //reset coin counter
+    collectedCoins = 0;
     printf("Game reset\n");
 }
 //----------------------------------------------------
@@ -124,18 +123,18 @@ static double time_passes;
 
 int runTime(const bool get)
 {
-// static int first = 1;
-static int start;
-if (first)
-{
-start = time(NULL);
-first = 0;
-}
-if (get)
-{
-return time(NULL) - start;
-}
-return 0;
+    // static int first = 1;
+    static int start;
+    if (first)
+    {
+        start = time(NULL);
+        first = 0;
+    }
+    if (get)
+    {
+        return time(NULL) - start;
+    }
+    return 0;
 }
 
 
