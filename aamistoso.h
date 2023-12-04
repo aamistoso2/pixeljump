@@ -10,5 +10,10 @@ extern void display_coinsCollected();
 
 //TO MAKE ADAM'S GAME RESET WORK
 extern int collectedCoins;
+
+#define MAX_COINS_X 6
+#define MAX_COINS_Y 6
+extern bool coinCollected[MAX_COINS_X][MAX_COINS_Y];
+
 #endif
 
