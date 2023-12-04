@@ -784,7 +784,7 @@ void physics(void)
         }
     }
 
-    printf("%f\n", gl.camera[0]);
+    //printf("%f\n", gl.camera[0]);
 
     //Jump Functionality - Nicklas Chiang
     for ( int i=0; i<20; i++ ) {
