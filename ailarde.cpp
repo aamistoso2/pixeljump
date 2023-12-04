@@ -109,6 +109,14 @@ void resetGame()
 {
     //reset coin counter
     collectedCoins = 0;
+
+    //put coins back after resetting
+    for (int x = 0; x < MAX_COINS_X; x++) {
+        for (int y = 0; y < MAX_COINS_Y; y++) {
+            coinCollected[x][y] = false;
+        }
+    }
+
     printf("Game reset\n");
 }
 //----------------------------------------------------
