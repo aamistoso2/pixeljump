@@ -5,6 +5,10 @@
 #include <stdio.h>
 #include <iostream>
 #include "pixel.h"
+#include <AL/al.h>
+#include <AL/alc.h>
+#include <AL/alut.h>
+#include <time.h>
 
 extern Global gl;
 extern Level lev;
@@ -67,17 +71,35 @@ int checkInAir(int floor) {
 	return inAir;
 }
 
+void playJumpSound() {
+    ALuint buffer, source;
+    buffer = alutCreateBufferFromFile("jump.wav");
+    alGenSources(1, &source);
+	alSourcef(source, AL_GAIN, 0.05f);
+    alSourcei(source, AL_BUFFER, buffer);
+    alSourcePlay(source);
+}
+
 void dash() {
 	// dash right
-	if (gl.facing == 1) {
-		for (int i = 20; i > 0; i--) {
-			gl.camera[0] += i;
-		}
+	if (!gl.dashing) {
+		gl.dashing = 1;
+		gl.ball_speed = 2.0f;
 	}
-	// dash left
-	else if (gl.facing == 0) {
-		for (int i = 20; i > 0; i--) {
-			gl.camera[0] -= i;
+	
+}
+
+void updateDash() {
+	if (gl.dashing) {
+		if (gl.dashFrame < gl.maxDashFrames) {
+			gl.dashFrame++;
+			gl.ball_speed = 2.0f;
+			gl.ball_vel[1] = 0.0f;
+		} 
+		else {
+			gl.dashFrame = 0;
+			gl.dashing = 0;
+			gl.ball_speed = 0.5;
 		}
 	}
 }
@@ -126,4 +148,16 @@ float findLeftWall(int col, int row) {
         leftWall = leftWall - 1.0f;
     }
     return leftWall = (leftWall * lev.tilesize[0]);
+}
+
+int damageImmune() {
+	static time_t lastTimeDamaged = 0;
+	time_t current_time = time(NULL);
+	if (current_time - lastTimeDamaged > 1) {
+		lastTimeDamaged = current_time;
+		return 0;
+	}
+	else {
+		return 1;
+	}
 }

@@ -46,6 +46,10 @@ class Global {
         int maxJumpFrames;
         int inAir;
         int secondJump;
+        float ball_speed;
+        int dashing;
+        int maxDashFrames;
+        int dashFrame;
         float max_hp;
         float current_hp;
         double transitionTime;
