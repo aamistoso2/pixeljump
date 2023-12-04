@@ -31,6 +31,9 @@
 #include "usingh.h"
 #include "ailarde.h"
 #include "pixel.h"
+#include <AL/al.h>
+#include <AL/alc.h>
+#include <AL/alut.h>
 
 //COINS - ADAM ILARDE
 #define MAX_COINS_X 6
@@ -176,8 +179,8 @@ Global::~Global() {
 Global::Global() {
     logOpen();
     camera[0] = camera[1] = 0.0;
-    movie=0;
-    movieStep=2;
+    //movie=0;
+    //movieStep=2;
     xres=800;
     yres=600;
     walk=0;
@@ -185,6 +188,9 @@ Global::Global() {
     isJumping = 0;
     jumpFrame = 0;
     maxJumpFrames = 15;
+    inAir = 0;
+    secondJump = 1;
+    facing = 1;
     transitionTime = 2.0f; 
     walkImage=NULL;
     MakeVector(ball_pos, 520.0, 92, 0);
@@ -195,17 +201,12 @@ Global::Global() {
     statistics = 0;
     show_credits = 0;
     max_hp = 200;
-    exp.onoff=0;
-    exp.frame=0;
-    exp.image=NULL;
-    exp.delay = 0.02;
-    exp44.onoff=0;
-    exp44.frame=0;
-    exp44.image=NULL;
-    exp44.delay = 0.022;
     for (int i=0; i<20; i++) {
-        box[i][0] = rnd() * xres;
-        box[i][1] = rnd() * (yres-220) + 220.0;
+        // box[i][0] = rnd() * xres;
+        // box[i][1] = rnd() * (yres-220) + 220.0;
+        // box[i][2] = 0.0;
+        box[i][0] = xres;
+        box[i][1] = (yres-220) + 220.0;
         box[i][2] = 0.0;
     }
     memset(keys, 0, 65536);
@@ -401,6 +402,7 @@ int main(void)
     init();
     display_menu(); // Calls from nchiang.cpp for a main menu
 
+    cleanupAL();
     return 0;
 }
 
@@ -510,7 +512,15 @@ void initOpengl(void)
 }
 
 void init() {
+    alutInit(0, NULL);
+}
 
+void cleanupAL() {
+    ALCcontext *Context = alcGetCurrentContext();
+    ALCdevice *Device = alcGetContextsDevice(Context);
+    alcMakeContextCurrent(NULL);
+    alcDestroyContext(Context);
+    alcCloseDevice(Device);
 }
 
 void checkMouse(XEvent *e)
@@ -644,9 +654,12 @@ int checkKeys(XEvent *e)
     //--------------------------------------------------
     (void)shift;
     //-Jump Functionality Working!-------------------
-    gl.keys[key]=1;
-    if (key == XK_space) {
+    //gl.keys[key]=1;
+    if (key == XK_space && !gl.isJumping && gl.secondJump) {
+        if (gl.inAir)
+            gl.secondJump = 0;
         jumping();
+        //printf("%d\n", gl.isJumping);
     }
     //--------------------------------------------------
     switch (key) {
@@ -676,11 +689,12 @@ int checkKeys(XEvent *e)
             gl.walk ^= 1;
             break;
         case XK_e:
-            gl.exp.pos[0] = 200.0;
-            gl.exp.pos[1] = -60.0;
-            gl.exp.pos[2] =   0.0;
-            timers.recordTime(&gl.exp.time);
-            gl.exp.onoff ^= 1;
+            // gl.exp.pos[0] = 200.0;
+            // gl.exp.pos[1] = -60.0;
+            // gl.exp.pos[2] =   0.0;
+            // timers.recordTime(&gl.exp.time);
+            // gl.exp.onoff ^= 1;
+            dash();
             break;
         case XK_f:
             gl.exp44.pos[0] = 200.0;
@@ -743,96 +757,46 @@ void physics(void)
     col = col % lev.ncols;
     //row = row % (lev.nrows + 1);
 
+    float rightWall = findRightWall(col, row);
+    float leftWall = findLeftWall(col, row);
+
+    //printf("%f %f\n", leftWall, rightWall);
+
     if (gl.walk || gl.keys[XK_Right] || gl.keys[XK_Left] || gl.keys[XK_a] || gl.keys[XK_d]) {
         for ( int i=0; i<20; i++ ) {
-            if ( gl.keys[XK_Left] || gl.keys[XK_a] ) {
-                //gl.ball_pos[0] -= 1.0f;
-                gl.box[i][0] += 1.0 * ( 0.05 / gl.delay );
+            if ( (gl.keys[XK_Left] || gl.keys[XK_a]) && leftWall < -32.0f ) {
+                gl.facing = 0;
+                gl.box[i][0] += 1.0 * ( 0.1 / gl.delay );
                 if ( gl.box[i][0] > gl.xres + 10.0 )
                     gl.box[i][0] -= gl.xres + 10.0;
-                gl.camera[0] -= 2.0/lev.tilesize[0] * ( 0.05 / gl.delay );
+                gl.camera[0] -= 2.0/lev.tilesize[0] * ( 0.1 / gl.delay );
                 if ( gl.camera[0] < 0.0 )
                     gl.camera[0] = 0.0;
-            
-            
-            
-            } else if ( gl.keys[XK_Right] || gl.keys[XK_d] ) {
-                //gl.ball_pos[0] += 1.0f;
-                gl.box[i][0] -= 1.0 * (0.05 / gl.delay);
+            } else if ( (gl.keys[XK_Right] || gl.keys[XK_d]) && rightWall > 32.0f ) {
+                gl.facing = 1;
+                gl.box[i][0] -= 1.0 * (0.1 / gl.delay);
                 if ( gl.box[i][0] < -10.0 )
                     gl.box[i][0] += gl.xres + 10.0;
-                gl.camera[0] += 2.0/lev.tilesize[0] * ( 0.05 / gl.delay );
+                gl.camera[0] += 2.0/lev.tilesize[0] * ( 0.1 / gl.delay );
                 if ( gl.camera[0] < 0.0 )
                     gl.camera[0] = 0.0;
             }
         }
     }
 
-
-    // Call from aamistoso.cpp for coins collection functionality
-    coinsCollection();
+    printf("%f\n", gl.camera[0]);
 
     //Jump Functionality - Nicklas Chiang
     for ( int i=0; i<20; i++ ) {
-        if ( gl.keys[XK_space] ) {
+        if ( gl.isJumping ) {
             updateJump();
         }
     }
     gl.keys[XK_space] = 0;
 
+    int floor = findFloor(col, row);
+    int cieling = findCeiling(col, row);
 
-
-    //====================================
-    //Adjust position of ball.
-    //Height of highest tile when ball is?
-    //====================================
-    
-    //printf("%d\n", row);
-    int floor = -999999;
-    int cieling = 999999;
-    //int wallRight = 99999;
-    for (int i = lev.nrows - row; i < lev.nrows ; i++) {        // find the floor below the box
-        //printf("%d %d\n", i, col);
-        //if (lev.arr[i][col] != ' ') {
-        if (lev.arr[i][col] == 'b' || lev.arr[i][col] == 'w') {
-            floor = ((lev.nrows - i) * lev.tilesize[1]);
-            //printf("%f\n", hgt / lev.ftsz[1]);
-            break;
-        }
-    }
-    for (int i = lev.nrows - row - 1; i >= 0 ; i--) {        // find the ceiling above the box
-        //printf("%d %d\n", i, col);
-        //if (lev.arr[i][col] != ' ') {
-        if (lev.arr[i][col] == 'b' || lev.arr[i][col] == 'w') {
-            cieling = (lev.nrows - i - 1) * lev.tilesize[1];
-            //printf("%f\n", cieling / lev.ftsz[1]);
-            break;
-        }
-    }
-/*
-    for (int i = col; i < lev.ncols; i++) {        // find the wall to the right
-        //printf("%d %d\n", i, col);
-        if (lev.arr[row][i] != ' ') {
-            wallRight = (col + i) * lev.tilesize[1];
-            //printf("%f\n", hgt / lev.ftsz[1]);
-            break;
-        }
-    }
-*/
-
-
-
-    //printf("%d %d\n", cieling, floor);
-    /*
-    if (gl.ball_pos[1] < (Flt)hgt) {
-        gl.ball_pos[1] = (Flt)hgt;
-        MakeVector(gl.ball_vel, 0, 0, 0);
-    } else {
-        gl.ball_vel[1] -= 0.9;
-    }
-    gl.ball_pos[1] += gl.ball_vel[1];
-    */
-    //for (int i = 0; i < 10; i++) {
     if (((gl.ball_pos[1] + 24.0f) > cieling) && (gl.ball_vel[1] >= 0.0f)) {
         gl.ball_vel[1] = 0.0f;
     }
@@ -843,11 +807,17 @@ void physics(void)
             gl.ball_vel[1] -= 0.9f;
     }
     gl.ball_pos[1] += gl.ball_vel[1];
-    if (gl.ball_pos[1] < -256.0f)
+    if (gl.ball_pos[1] < -256.0f) {
         gl.current_hp = 0.0f;
-    //if (gl.ball_vel[1] < 0.0f)
-    //    printf("%f\n", gl.ball_vel[1]);
-    //}
+    }
+
+    gl.inAir = checkInAir(floor);
+    if(!gl.inAir)
+        gl.secondJump = 1;
+
+    // Call from aamistoso.cpp for coins collection functionality
+    coinsCollection();
+    
 }
 // Udai Singh
 // Changed background to a Starry Background
@@ -883,42 +853,8 @@ void render(void) {
       glColor3f(1.0, 1.0, 1.0);
 
     //float cx = gl.xres/2.0;
-    //float cy = gl.yres/2.0;
+    //float cy = gl.yres/2.0;   
 
-    /*
-     * TOOK OUT GROUND - ADAM ILARDE
-    //show ground
-    glBegin(GL_QUADS);
-    glColor3f(0.2, 0.2, 0.2);
-    glVertex2i(0,       220);
-    glVertex2i(gl.xres, 220);
-    glColor3f(0.4, 0.4, 0.4);
-    glVertex2i(gl.xres,   0);
-    glVertex2i(0,         0);
-    glEnd();
-    //
-    */
-
-
-/* WE DON'T NEED THE BACKGROUND - ADAM ILARDE
-    //show boxes as background
-    for (int i=0; i<20; i++) {
-        glPushMatrix();
-        glTranslated(gl.box[i][0],gl.box[i][1],gl.box[i][2]);
-        glColor3f(0.2, 0.2, 0.2);
-        glBegin(GL_QUADS);
-        glVertex2i( 0,  0);
-        glVertex2i( 0, 30);
-        glVertex2i(20, 30);
-        glVertex2i(20,  0);
-        glEnd();
-        glPopMatrix();
-    }
-
-*/
-    
-    
-    //
     //========================
     //Render the tile system
     //========================
@@ -990,7 +926,7 @@ void render(void) {
         col = (col+1) % lev.ncols;
     }
 
-      //COINS - ADAM ILARDE
+    //COINS - ADAM ILARDE
     for (int x = 0; x < MAX_COINS_X; x++) {
         for (int y = 0; y < MAX_COINS_Y; y++) {
             // Calculate new coordinates for each coin based on camera movement
@@ -1053,110 +989,14 @@ void render(void) {
     glPopMatrix();
 
     //--------------------------------------
-    //
-    //#define SHOW_FAKE_SHADOW
-#ifdef SHOW_FAKE_SHADOW
-    glColor3f(0.25, 0.25, 0.25);
-    glBegin(GL_QUADS);
-    glVertex2i(cx-60, 150);
-    glVertex2i(cx+50, 150);
-    glVertex2i(cx+50, 130);
-    glVertex2i(cx-60, 130);
-    glEnd();
-#endif
-    //
-    //
     //float h = 200.0;
     //float w = h * 0.5;
     glPushMatrix();
     glColor3f(1.0, 1.0, 1.0);
     glBindTexture(GL_TEXTURE_2D, gl.walkTexture);
     //
-    //
-    //GRAPHICS OF THE MAN - ADAM ILARDE
-    /*-----------------------------------------------------------
-    glEnable(GL_ALPHA_TEST);
-    glAlphaFunc(GL_GREATER, 0.0f);
-    glColor4ub(255,255,255,255);
-    int ix = gl.walkFrame % 8;
-    int iy = 0;
-    if (gl.walkFrame >= 8)
-        iy = 1;
-    float fx = (float)ix / 8.0;
-    float fy = (float)iy / 2.0;
-    glBegin(GL_QUADS);
-    if (gl.keys[XK_Left] || gl.keys[XK_a]) {
-        glTexCoord2f(fx+.125, fy+.5); glVertex2i(cx-w, cy-h);
-        glTexCoord2f(fx+.125, fy);    glVertex2i(cx-w, cy+h);
-        glTexCoord2f(fx,      fy);    glVertex2i(cx+w, cy+h);
-        glTexCoord2f(fx,      fy+.5); glVertex2i(cx+w, cy-h);
-    } else {
-        glTexCoord2f(fx,      fy+.5); glVertex2i(cx-w, cy-h);
-        glTexCoord2f(fx,      fy);    glVertex2i(cx-w, cy+h);
-        glTexCoord2f(fx+.125, fy);    glVertex2i(cx+w, cy+h);
-        glTexCoord2f(fx+.125, fy+.5); glVertex2i(cx+w, cy-h);
-    }
-    glEnd();
-    glPopMatrix();
-    glBindTexture(GL_TEXTURE_2D, 0);
-    glDisable(GL_ALPHA_TEST);
-    */
+ 
     //--------------------------------------------------------------
-    //
-    //
-    /*
-    if (gl.exp.onoff) {
-        h = 80.0;
-        w = 80.0;
-        glPushMatrix();
-        glColor3f(1.0, 1.0, 1.0);
-        glBindTexture(GL_TEXTURE_2D, gl.exp.tex);
-        glEnable(GL_ALPHA_TEST);
-        glAlphaFunc(GL_GREATER, 0.0f);
-        glColor4ub(255,255,255,255);
-        glTranslated(gl.exp.pos[0], gl.exp.pos[1], gl.exp.pos[2]);
-        int ix = gl.exp.frame % 5;
-        int iy = gl.exp.frame / 5;
-        float tx = (float)ix / 5.0;
-        float ty = (float)iy / 5.0;
-        glBegin(GL_QUADS);
-        glTexCoord2f(tx,     ty+0.2); glVertex2i(cx-w, cy-h);
-        glTexCoord2f(tx,     ty);     glVertex2i(cx-w, cy+h);
-        glTexCoord2f(tx+0.2, ty);     glVertex2i(cx+w, cy+h);
-        glTexCoord2f(tx+0.2, ty+0.2); glVertex2i(cx+w, cy-h);
-        glEnd();
-        glPopMatrix();
-        glBindTexture(GL_TEXTURE_2D, 0);
-        glDisable(GL_ALPHA_TEST);
-    }
-    
-    //
-    //
-    if (gl.exp44.onoff) {
-        h = 80.0;
-        w = 80.0;
-        glPushMatrix();
-        glColor3f(1.0, 1.0, 1.0);
-        glBindTexture(GL_TEXTURE_2D, gl.exp44.tex);
-        glEnable(GL_ALPHA_TEST);
-        glAlphaFunc(GL_GREATER, 0.0f);
-        glColor4ub(255,255,255,255);
-        glTranslated(gl.exp44.pos[0], gl.exp44.pos[1], gl.exp44.pos[2]);
-        int ix = gl.exp44.frame % 4;
-        int iy = gl.exp44.frame / 4;
-        float tx = (float)ix / 4.0;
-        float ty = (float)iy / 4.0;
-        glBegin(GL_QUADS);
-        glTexCoord2f(tx,      ty+0.25); glVertex2i(cx-w, cy-h);
-        glTexCoord2f(tx,      ty);      glVertex2i(cx-w, cy+h);
-        glTexCoord2f(tx+0.25, ty);      glVertex2i(cx+w, cy+h);
-        glTexCoord2f(tx+0.25, ty+0.25); glVertex2i(cx+w, cy-h);
-        glEnd();
-        glPopMatrix();
-        glBindTexture(GL_TEXTURE_2D, 0);
-        glDisable(GL_ALPHA_TEST);
-    }
-    */
     //unsigned int c = 0x00ffff44;
     r.bot = gl.yres - 20;
     r.left = 10;
