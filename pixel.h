@@ -18,6 +18,7 @@ typedef Flt	Matrix[4][4];
 (c)[2]=(a)[2]-(b)[2]
 
 extern void play_game();
+void cleanupAL();
 
 class Image;
 
@@ -43,6 +44,8 @@ class Global {
         int isJumping;
         int jumpFrame;
         int maxJumpFrames;
+        int inAir;
+        int secondJump;
         float max_hp;
         float current_hp;
         double transitionTime;
@@ -51,6 +54,7 @@ class Global {
         int show_name;
         int statistics;
         int show_credits;
+        int facing;
         Image *walkImage;
         GLuint walkTexture;
         Vec box[20];
