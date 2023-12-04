@@ -190,6 +190,10 @@ Global::Global() {
     maxJumpFrames = 15;
     inAir = 0;
     secondJump = 1;
+    ball_speed = 0.5f;
+    dashing = 0;
+    maxDashFrames = 5;
+    dashFrame = 0;
     facing = 1;
     transitionTime = 2.0f; 
     walkImage=NULL;
@@ -647,9 +651,9 @@ int checkKeys(XEvent *e)
     }
     //-Sprint Functionality WORKING - Nicklas Chiang----
     if (isShiftHeld) {
-        gl.delay = 0.010;
+        gl.ball_speed = 0.8f;
     } else {
-        gl.delay = 0.025;
+        gl.ball_speed = 0.5f;
     }
     //--------------------------------------------------
     (void)shift;
@@ -659,6 +663,7 @@ int checkKeys(XEvent *e)
         if (gl.inAir)
             gl.secondJump = 0;
         jumping();
+        playJumpSound();
         //printf("%d\n", gl.isJumping);
     }
     //--------------------------------------------------
@@ -746,7 +751,6 @@ Flt VecNormalize(Vec vec)
 }
 
 
-
 void physics(void)
 {
     total_physics_function_calls(false);
@@ -762,24 +766,50 @@ void physics(void)
 
     //printf("%f %f\n", leftWall, rightWall);
 
-    if (gl.walk || gl.keys[XK_Right] || gl.keys[XK_Left] || gl.keys[XK_a] || gl.keys[XK_d]) {
+    // if (gl.walk || gl.keys[XK_Right] || gl.keys[XK_Left] || gl.keys[XK_a] || gl.keys[XK_d]) {
+    //     for ( int i=0; i<20; i++ ) {
+    //         if ( (gl.keys[XK_Left] || gl.keys[XK_a]) && leftWall < -32.0f ) {
+    //             gl.facing = 0;
+    //             gl.box[i][0] += 1.0 * ( 0.1 / gl.delay );
+    //             if ( gl.box[i][0] > gl.xres + 10.0 )
+    //                 gl.box[i][0] -= gl.xres + 10.0;
+    //             gl.camera[0] -= 2.0/lev.tilesize[0] * ( 0.1 / gl.delay );
+    //             if ( gl.camera[0] < 0.0 )
+    //                 gl.camera[0] = 0.0;
+    //         } else if ( (gl.keys[XK_Right] || gl.keys[XK_d]) && rightWall > 32.0f ) {
+    //             gl.facing = 1;
+    //             gl.box[i][0] -= 1.0 * (0.1 / gl.delay);
+    //             if ( gl.box[i][0] < -10.0 )
+    //                 gl.box[i][0] += gl.xres + 10.0;
+    //             gl.camera[0] += 2.0/lev.tilesize[0] * ( 0.1 / gl.delay );
+    //             if ( gl.camera[0] < 0.0 )
+    //                 gl.camera[0] = 0.0;
+    //         }
+    //     }
+    // }
+
+    updateDash();
+    if (gl.keys[XK_Right] || gl.keys[XK_Left] || gl.keys[XK_a] || gl.keys[XK_d]) {
+        //updateDash();
         for ( int i=0; i<20; i++ ) {
             if ( (gl.keys[XK_Left] || gl.keys[XK_a]) && leftWall < -32.0f ) {
                 gl.facing = 0;
-                gl.box[i][0] += 1.0 * ( 0.1 / gl.delay );
-                if ( gl.box[i][0] > gl.xres + 10.0 )
-                    gl.box[i][0] -= gl.xres + 10.0;
-                gl.camera[0] -= 2.0/lev.tilesize[0] * ( 0.1 / gl.delay );
-                if ( gl.camera[0] < 0.0 )
-                    gl.camera[0] = 0.0;
+                gl.ball_vel[0] = -gl.ball_speed;
+                gl.box[i][0] += gl.ball_vel[0];
+                // if ( gl.box[i][0] > gl.xres + 10.0 )
+                //     gl.box[i][0] -= gl.xres + 10.0;
+                gl.camera[0] += gl.ball_vel[0];
+                // if ( gl.camera[0] < 0.0 )
+                //     gl.camera[0] = 0.0;
             } else if ( (gl.keys[XK_Right] || gl.keys[XK_d]) && rightWall > 32.0f ) {
                 gl.facing = 1;
-                gl.box[i][0] -= 1.0 * (0.1 / gl.delay);
-                if ( gl.box[i][0] < -10.0 )
-                    gl.box[i][0] += gl.xres + 10.0;
-                gl.camera[0] += 2.0/lev.tilesize[0] * ( 0.1 / gl.delay );
-                if ( gl.camera[0] < 0.0 )
-                    gl.camera[0] = 0.0;
+                gl.ball_vel[0] = gl.ball_speed;
+                gl.box[i][0] += gl.ball_vel[0];
+                // if ( gl.box[i][0] < -10.0 )
+                //     gl.box[i][0] += gl.xres + 10.0;
+                gl.camera[0] += gl.ball_vel[0];
+                // if ( gl.camera[0] < 0.0 )
+                //     gl.camera[0] = 0.0;
             }
         }
     }
@@ -796,21 +826,24 @@ void physics(void)
 
     int floor = findFloor(col, row);
     int cieling = findCeiling(col, row);
-
+    // jumping
     if (((gl.ball_pos[1] + 24.0f) > cieling) && (gl.ball_vel[1] >= 0.0f)) {
         gl.ball_vel[1] = 0.0f;
     }
+    // falling
     if (((gl.ball_pos[1] - 10.0f) < floor) && (gl.ball_vel[1] <= 0.0f)) {
         gl.ball_vel[1] = 0.0f;
     } else {
         if (gl.ball_vel[1] > -9.0f)
             gl.ball_vel[1] -= 0.9f;
     }
+    // update y position with current y velocity
     gl.ball_pos[1] += gl.ball_vel[1];
     if (gl.ball_pos[1] < -256.0f) {
         gl.current_hp = 0.0f;
     }
 
+    // one air jump
     gl.inAir = checkInAir(floor);
     if(!gl.inAir)
         gl.secondJump = 1;
@@ -959,15 +992,15 @@ void render(void) {
                 //if (gl.current_hp > 0) {
                 //    gl.current_hp -= 1;
                 //}
+                if (!damageImmune()) {
+                    float decrease = 25;
+                    gl.current_hp -= decrease;
 
-                float decrease = 25;
-                gl.current_hp -= decrease;
-
-                if (gl.current_hp <= 0) {
-                    //gl.current_hp = 0;
-                    display_game_over();
+                    if (gl.current_hp <= 0) {
+                        //gl.current_hp = 0;
+                        display_game_over();
+                    }
                 }
-
             } else {
                 // Display the spike at the updated position
                 showSpikes(spikeX, spikeY, 10.0);             }
