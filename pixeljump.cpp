@@ -403,6 +403,7 @@ int main(void)
 {
     initOpengl();
     init();
+    playBackgroundMusic(); // Background music from aamistoso.cpp
     display_menu(); // Calls from nchiang.cpp for a main menu
 
     cleanupAL();
