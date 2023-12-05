@@ -96,6 +96,17 @@ void playCollectSound() {
     
 }
 
+void playBackgroundMusic() {
+    ALuint buffer, source;
+    buffer = alutCreateBufferFromFile("battle.wav");
+    alGenSources(1, &source);
+    alSourcei(source, AL_BUFFER, buffer);
+    // Loop the background music
+    alSourcei(source, AL_LOOPING, AL_TRUE);
+    alSourcePlay(source);
+}
+
+
 void display_coinsCollected() {
     coinsCollection();
     // Display collected coins at the top-left of the screen
