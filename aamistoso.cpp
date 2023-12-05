@@ -98,7 +98,7 @@ void playCollectSound() {
 
 void playBackgroundMusic() {
     ALuint buffer, source;
-    buffer = alutCreateBufferFromFile("battle.wav");
+    buffer = alutCreateBufferFromFile("./sounds/battle.wav");
     alGenSources(1, &source);
     alSourcei(source, AL_BUFFER, buffer);
     // Loop the background music
