@@ -72,21 +72,34 @@ int checkInAir(int floor) {
 }
 
 void playJumpSound() {
-    ALuint buffer, source;
-    buffer = alutCreateBufferFromFile("jump.wav");
-    alGenSources(1, &source);
-	alSourcef(source, AL_GAIN, 0.05f);
-    alSourcei(source, AL_BUFFER, buffer);
-    alSourcePlay(source);
+    ALuint buffer1, source1;
+    buffer1 = alutCreateBufferFromFile("./sounds/jump.wav");
+    alGenSources(1, &source1);
+	alSourcef(source1, AL_GAIN, 0.05f);
+    alSourcei(source1, AL_BUFFER, buffer1);
+    alSourcePlay(source1);
+}
+
+void playDashSound() {
+    ALuint buffer2, source2;
+    buffer2 = alutCreateBufferFromFile("./sounds/dash.wav");
+    alGenSources(1, &source2);
+	alSourcef(source2, AL_GAIN, 0.5f);
+    alSourcei(source2, AL_BUFFER, buffer2);
+    alSourcePlay(source2);
 }
 
 void dash() {
 	// dash right
-	if (!gl.dashing) {
+	static time_t lastTimeDashed = 0;
+	time_t currentTime = time(NULL);
+	time_t timeDiff = currentTime - lastTimeDashed;
+	if (!gl.dashing && timeDiff >= 1) {
+		playDashSound();
 		gl.dashing = 1;
 		gl.ball_speed = 2.0f;
+		lastTimeDashed = currentTime;
 	}
-	
 }
 
 void updateDash() {
