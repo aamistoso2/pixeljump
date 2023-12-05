@@ -394,10 +394,9 @@ Image::Image(const char *fname) {
     unlink(ppmname);
 }
 
-Image img[3] = {
-    "./images/walk.gif",
-    "./images/exp.png",
-    "./images/exp44.png" };
+Image img[1] = {
+    "./images/knight.png"
+    };
 
 
 int main(void)
@@ -468,51 +467,50 @@ void initOpengl(void)
     int h = img[0].height;
     //
     //create opengl texture elements
-    glGenTextures(1, &gl.walkTexture);
+    glGenTextures(1, &gl.knightTexture);
     //-------------------------------------------------------------------------
-    //silhouette
-    //this is similar to a sprite graphic
+    //knight character
     //
-    glBindTexture(GL_TEXTURE_2D, gl.walkTexture);
+    glBindTexture(GL_TEXTURE_2D, gl.knightTexture);
     //
     glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
     //
     //must build a new set of data...
-    unsigned char *walkData = buildAlphaData(&img[0]);	
+    unsigned char *knightData = buildAlphaData(&img[0]);	
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0,
-            GL_RGBA, GL_UNSIGNED_BYTE, walkData);
-    free(walkData);
+            GL_RGBA, GL_UNSIGNED_BYTE, knightData);
+    free(knightData);
     //-------------------------------------------------------------------------
     //create opengl texture elements
-    w = img[1].width;
-    h = img[1].height;
-    glGenTextures(1, &gl.exp.tex);
+    //w = img[0].width;
+    //h = img[0].height;
+    //glGenTextures(1, &gl.exp.tex);
     //-------------------------------------------------------------------------
     //this is similar to a sprite graphic
-    glBindTexture(GL_TEXTURE_2D, gl.exp.tex);
-    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
+    //glBindTexture(GL_TEXTURE_2D, gl.exp.tex);
+    //glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
+    //glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
     //must build a new set of data...
-    unsigned char *xData = buildAlphaData(&img[1]);	
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0,
-            GL_RGBA, GL_UNSIGNED_BYTE, xData);
-    free(xData);
+    //unsigned char *xData = buildAlphaData(&img[1]);	
+    //glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0,
+    //        GL_RGBA, GL_UNSIGNED_BYTE, xData);
+    //free(xData);
     //-------------------------------------------------------------------------
-    w = img[2].width;
-    h = img[2].height;
+    //w = img[2].width;
+    //h = img[2].height;
     //create opengl texture elements
-    glGenTextures(1, &gl.exp44.tex);
+    //glGenTextures(1, &gl.exp44.tex);
     //-------------------------------------------------------------------------
     //this is similar to a sprite graphic
-    glBindTexture(GL_TEXTURE_2D, gl.exp44.tex);
-    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
+    //glBindTexture(GL_TEXTURE_2D, gl.exp44.tex);
+    //glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
+    //glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
     //must build a new set of data...
-    xData = buildAlphaData(&img[2]);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0,
-            GL_RGBA, GL_UNSIGNED_BYTE, xData);
-    free(xData);
+    //xData = buildAlphaData(&img[2]);
+    //glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0,
+    //        GL_RGBA, GL_UNSIGNED_BYTE, xData);
+    //free(xData);
 }
 
 void init() {
@@ -1013,11 +1011,14 @@ void render(void) {
     glPushMatrix();
     //put ball in its place
     glTranslated(gl.ball_pos[0], lev.tile_base+gl.ball_pos[1], 0);
+    glBindTexture(GL_TEXTURE_2D, gl.knightTexture);
+    glEnable(GL_ALPHA_TEST);
+    glAlphaFunc(GL_GREATER, 0.0f);
     glBegin(GL_QUADS);
-        glVertex2i(-10, 0);
-        glVertex2i(-10, 20);
-        glVertex2i( 10, 20);
-        glVertex2i( 10, 0);
+        glTexCoord2f(0.0f, 1.0f);  glVertex2i(-10, 0);
+        glTexCoord2f(0.0f, 0.0f); glVertex2i(-10, 20);
+        glTexCoord2f(1.0f, 0.0f); glVertex2i( 10, 20);
+        glTexCoord2f(1.0f, 1.0f); glVertex2i( 10, 0);
     glEnd();
     glPopMatrix();
 
@@ -1026,7 +1027,7 @@ void render(void) {
     //float w = h * 0.5;
     glPushMatrix();
     glColor3f(1.0, 1.0, 1.0);
-    glBindTexture(GL_TEXTURE_2D, gl.walkTexture);
+    //glBindTexture(GL_TEXTURE_2D, gl.walkTexture);
     //
  
     //--------------------------------------------------------------
@@ -1036,9 +1037,7 @@ void render(void) {
     r.center = 0;
 
     if (gl.show_name) {
-
         display_border(gl.xres, gl.yres);
-
     }
 
     //Calls from nchiang.cpp to display credits

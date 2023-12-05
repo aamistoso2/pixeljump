@@ -206,7 +206,7 @@ void display_options()
     ggprint8b(&r, 16, 0xffffffff, "Shift -> Sprint");
     ggprint8b(&r, 16, 0xffffffff, "Right Arrow or 'D' -> Walk Right");
     ggprint8b(&r, 16, 0xffffffff, "Left arrow or 'A'  <- Walk Left");
-    ggprint8b(&r, 16, 0xffffffff, "E ->  Explosion");
+    ggprint8b(&r, 16, 0xffffffff, "E ->  Dash");
     ggprint8b(&r, 16, 0xffffffff, "frame: %i", gl.walkFrame);
 
     glDisable(GL_BLEND);

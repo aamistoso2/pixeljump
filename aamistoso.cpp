@@ -89,7 +89,7 @@ void coinsCollection() {
 void playCollectSound() {
     // Load and play the "collect.wav" sound
     ALuint buffer, source;
-    buffer = alutCreateBufferFromFile("collect.wav");
+    buffer = alutCreateBufferFromFile("./sounds/collect.wav");
     alGenSources(1, &source);
     alSourcei(source, AL_BUFFER, buffer);
     alSourcePlay(source);

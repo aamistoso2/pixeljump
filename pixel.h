@@ -60,7 +60,7 @@ class Global {
         int show_credits;
         int facing;
         Image *walkImage;
-        GLuint walkTexture;
+        GLuint knightTexture;
         Vec box[20];
         Sprite exp;
         Sprite exp44;
