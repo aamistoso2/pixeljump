@@ -74,7 +74,7 @@ class Global {
 
 class Level {
     public:
-        unsigned char arr[16][80];
+        unsigned char arr[30][100];
         int nrows, ncols;
         int tilesize[2];
         Flt ftsz[2];

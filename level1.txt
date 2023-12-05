@@ -1,9 +1,15 @@
-                                        bbbbbbbb                              
-                                    bbbbbb                                    
-                                bbbbbbbb                                      
-bbbbbbbbbbbbbb              bbbbbbbbbb                                        
-bb  bb  bb  bb          bbbbbbbbbbbb                    b   b   b   b         
-bbbbbbbbbbbbbb          bbbbbbbbbbbbbbbb    bbbbbbbbb  bbb bbb bbb bbb        
-bbbbbbbbbbbbbb          bbbbbbbbbbbbbbbb    bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
-wwwwwwwwwwwwwwwwwwww    wwwwwwwwwwwwwwww    wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
-wwwwwwwwwwwwwwwwwwwwww  wwwwwwwwwwwwwwww    wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+                                                                                 eeeeeeeeeeeeeeeee
+                                                                                 eeeeeeeeeeeeeeeee
+                                                                bbbbbbbbb        eeeeeeeeeeeeeeeee
+                                                                b       b        eeeeeeeeeeeeeeeee
+                                                                b   b   b        eeeeeeeeeeeeeeeee
+                                                                b       b        eeeeeeeeeeeeeeeee
+        bbb           bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb          bbb   bbb        eeeeeeeeeeeeeeeee
+                      bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb                           eeeeeeeeeeeeeeeee
+                      bbbbbbbbbb                                                 eeeeeeeeeeeeeeeee
+                      bbbbbbbbbb                                                 eeeeeeeeeeeeeeeee
+  bb   bbbbb          bbbbbbbbbb                                                 eeeeeeeeeeeeeeeee
+                      bbbbbbbbbb                            b     b     b        eeeeeeeeeeeeeeeee
+                      bbbbbbbbbb                           bbb   bbb   bbb       eeeeeeeeeeeeeeeee
+wwwwwwwwwwww     wwwwwwwwwwwwwwwww        www           wwwwwwwwwwwwwwwwwwwwwwwwweeeeeeeeeeeeeeeee
+wwwwwwwwwwww     wwwwwwwwwwwwwwwww                      wwwwwwwwwwwwwwwwwwwwwwwwweeeeeeeeeeeeeeeee
