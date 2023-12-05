@@ -43,26 +43,26 @@ extern int collectedCoins;
 
 bool coinCollected[MAX_COINS_X][MAX_COINS_Y] = {0};
 int coinFixedX[MAX_COINS_X][MAX_COINS_Y] = {
-    {600, 0, 900},
-    {0, 1300, 1500},
-    {0, 1900, 2000},
+    {300, 0, 610},
+    {0, 1050, 1250},
+    {0, 1900, 2190}
 
-    //second set
-    {0, 0, 2700},
-    {0, 3000, 3500},
-    {4000, 4500, 5500}
+    // //second set
+    // {430, 0, 2700},
+    // {0, 3000, 3500},
+    // {4000, 4500, 5500}
 
 };
 
 int coinFixedY[MAX_COINS_X][MAX_COINS_Y] = {
-    {330, 0, 550},
-    {0, 560, 400},
-    {0, 500, 330},
+    {450, 0, 250},
+    {0, 206, 500},
+    {0, 500, 495}
 
-    //second set
-    {0, 0, 550},
-    {0, 560, 450},
-    {550, 400, 500}
+    // //second set
+    // {0, 0, 550},
+    // {0, 560, 450},
+    // {550, 400, 500}
 
 };
 
@@ -71,15 +71,15 @@ int coinFixedY[MAX_COINS_X][MAX_COINS_Y] = {
 #define MAX_SPIKES_Y 12
 
 int spikesFixedX[MAX_SPIKES_X][MAX_SPIKES_Y] = {
-    {800, 830, 0}, 
+    {360, 830, 0}, 
     {1070, 1100, 1130}, 
     {1500, 0, 0},
     //the top of the 3 mini hills
     //add 128 to the previous location
-    {1807, 1935, 2063},
-    {2191, 0, 0},
+    {1900, 1935, 2100},
+    {2250, 0, 0},
     //last of cycle
-    {2620, 2650, 2680},
+    {2064, 2194, 2320},
 
     //second cycle
     {3300, 3330, 0},
@@ -89,21 +89,18 @@ int spikesFixedX[MAX_SPIKES_X][MAX_SPIKES_Y] = {
     //middle
     {4800, 4830, 4860},
     //last of cycle
-    {5100, 5200, 5230},
-
-
-      
+    {5100, 5200, 5230},      
 };
 
 int spikesFixedY[MAX_SPIKES_X][MAX_SPIKES_Y] = {
-    {390, 390, 0}, 
-    {451, 451, 451}, 
-    {518, 0, 0},
+    {290, 420, 0}, 
+    {420, 420, 420}, 
+    {420, 0, 0},
     //top of the 3 mini hills
-    {390, 390, 390},
-    {390, 0, 0},
+    {225, 260, 420},
+    {420, 0, 0},
     //last of cycle
-    {422, 422, 422},
+    {550, 550, 550},
     
     //second cycle
     {390, 390, 0},
@@ -119,7 +116,7 @@ int spikesFixedY[MAX_SPIKES_X][MAX_SPIKES_Y] = {
 };
 
 //RESET COORDINATES
-int resetBallPosX = 250;
+int resetBallPosX = 300;
 int resetBallPosY = 300; 
 
 
@@ -178,9 +175,7 @@ Global::~Global() {
 
 Global::Global() {
     logOpen();
-    camera[0] = camera[1] = 0.0;
-    //movie=0;
-    //movieStep=2;
+    camera[0] = camera[1] = 0.0; 
     xres=800;
     yres=600;
     walk=0;
@@ -197,18 +192,15 @@ Global::Global() {
     facing = 1;
     transitionTime = 2.0f; 
     walkImage=NULL;
-    MakeVector(ball_pos, 520.0, 92, 0);
+    MakeVector(ball_pos, 300.0, 64, 0);
     MakeVector(ball_vel, 0, 0, 0);
-    current_hp = 200.0f;
+    current_hp = 100.0f;
     delay = 0.02;
     show_name = 0;
     statistics = 0;
     show_credits = 0;
-    max_hp = 200;
+    max_hp = 100.0;
     for (int i=0; i<20; i++) {
-        // box[i][0] = rnd() * xres;
-        // box[i][1] = rnd() * (yres-220) + 220.0;
-        // box[i][2] = 0.0;
         box[i][0] = xres;
         box[i][1] = (yres-220) + 220.0;
         box[i][2] = 0.0;
@@ -224,7 +216,7 @@ Level::Level() {
     tilesize[1] = 32;
     ftsz[0] = (Flt)tilesize[0];
     ftsz[1] = (Flt)tilesize[1];
-    tile_base = 220.0;
+    tile_base = 120.0;
     //read level
     FILE *fpi = fopen("level1.txt","r");
     if (fpi) {
@@ -243,12 +235,12 @@ Level::Level() {
         fclose(fpi);
         //printf("nrows of background data: %i\n", nrows);
     }
-    for (int i=0; i<nrows; i++) {
-        for (int j=0; j<ncols; j++) {
-            printf("%c", arr[i][j]);
-        }
-        printf("\n");
-    }
+    // for (int i=0; i<nrows; i++) {
+    //     for (int j=0; j<ncols; j++) {
+    //         printf("%c", arr[i][j]);
+    //     }
+    //     printf("\n");
+    // }
 }
 
 void Level::removeCrLf(char *str) {
@@ -482,36 +474,6 @@ void initOpengl(void)
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0,
             GL_RGBA, GL_UNSIGNED_BYTE, knightData);
     free(knightData);
-    //-------------------------------------------------------------------------
-    //create opengl texture elements
-    //w = img[0].width;
-    //h = img[0].height;
-    //glGenTextures(1, &gl.exp.tex);
-    //-------------------------------------------------------------------------
-    //this is similar to a sprite graphic
-    //glBindTexture(GL_TEXTURE_2D, gl.exp.tex);
-    //glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
-    //glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
-    //must build a new set of data...
-    //unsigned char *xData = buildAlphaData(&img[1]);	
-    //glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0,
-    //        GL_RGBA, GL_UNSIGNED_BYTE, xData);
-    //free(xData);
-    //-------------------------------------------------------------------------
-    //w = img[2].width;
-    //h = img[2].height;
-    //create opengl texture elements
-    //glGenTextures(1, &gl.exp44.tex);
-    //-------------------------------------------------------------------------
-    //this is similar to a sprite graphic
-    //glBindTexture(GL_TEXTURE_2D, gl.exp44.tex);
-    //glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
-    //glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
-    //must build a new set of data...
-    //xData = buildAlphaData(&img[2]);
-    //glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0,
-    //        GL_RGBA, GL_UNSIGNED_BYTE, xData);
-    //free(xData);
 }
 
 void init() {
@@ -562,6 +524,8 @@ void checkMouse(XEvent *e)
 //Added Play Game - Nicklas Chiang
 void play_game()
 {
+    printControls();
+
     int done = 0;
     clock_gettime(CLOCK_REALTIME, &timers.timePause);
     clock_gettime(CLOCK_REALTIME, &timers.timeStart);
@@ -663,7 +627,6 @@ int checkKeys(XEvent *e)
             gl.secondJump = 0;
         jumping();
         playJumpSound();
-        //printf("%d\n", gl.isJumping);
     }
     //--------------------------------------------------
     switch (key) {
@@ -676,10 +639,9 @@ int checkKeys(XEvent *e)
             resetGame();
             gl.ball_pos[0] = resetBallPosX;
             gl.ball_pos[1] = resetBallPosY;
-            gl.current_hp = 200;
+            gl.current_hp = 100;
             break;
         case XK_s:
-            //screenCapture();
             gl.statistics ^= 1;
             break;
         case XK_g:
@@ -689,23 +651,9 @@ int checkKeys(XEvent *e)
             gl.movie ^= 1;
             break;
         case XK_w:
-            timers.recordTime(&timers.walkTime);
-            gl.walk ^= 1;
-            break;
-        case XK_e:
-            // gl.exp.pos[0] = 200.0;
-            // gl.exp.pos[1] = -60.0;
-            // gl.exp.pos[2] =   0.0;
-            // timers.recordTime(&gl.exp.time);
-            // gl.exp.onoff ^= 1;
             dash();
             break;
         case XK_f:
-            gl.exp44.pos[0] = 200.0;
-            gl.exp44.pos[1] = -60.0;
-            gl.exp44.pos[2] =   0.0;
-            timers.recordTime(&gl.exp44.time);
-            gl.exp44.onoff ^= 1;
             break;
         case XK_Left:
             break;
@@ -715,14 +663,6 @@ int checkKeys(XEvent *e)
             break;
         case XK_Down:
             break;
-            //	case XK_equal:
-            //		gl.delay -= 0.005;
-            //		if (gl.delay < 0.005)
-            //			gl.delay = 0.005;
-            //		break;
-            //	case XK_minus:
-            //		gl.delay += 0.005;
-            //		break;
         case XK_Escape:
             return 1;
             break;
@@ -757,63 +697,39 @@ void physics(void)
     Flt dd = lev.ftsz[0];                                     // x width for each block
     int col = (int)((gl.camera[0] + gl.ball_pos[0]) / dd);    // finds the column that the block is on
     int row = (int)((gl.camera[1] + gl.ball_pos[1]) / dd);    // finds the row that the block is on
-    col = col % lev.ncols;
+    //col = col % lev.ncols;
     //row = row % (lev.nrows + 1);
 
     float rightWall = findRightWall(col, row);
     float leftWall = findLeftWall(col, row);
-
-    //printf("%f %f\n", leftWall, rightWall);
-
-    // if (gl.walk || gl.keys[XK_Right] || gl.keys[XK_Left] || gl.keys[XK_a] || gl.keys[XK_d]) {
-    //     for ( int i=0; i<20; i++ ) {
-    //         if ( (gl.keys[XK_Left] || gl.keys[XK_a]) && leftWall < -32.0f ) {
-    //             gl.facing = 0;
-    //             gl.box[i][0] += 1.0 * ( 0.1 / gl.delay );
-    //             if ( gl.box[i][0] > gl.xres + 10.0 )
-    //                 gl.box[i][0] -= gl.xres + 10.0;
-    //             gl.camera[0] -= 2.0/lev.tilesize[0] * ( 0.1 / gl.delay );
-    //             if ( gl.camera[0] < 0.0 )
-    //                 gl.camera[0] = 0.0;
-    //         } else if ( (gl.keys[XK_Right] || gl.keys[XK_d]) && rightWall > 32.0f ) {
-    //             gl.facing = 1;
-    //             gl.box[i][0] -= 1.0 * (0.1 / gl.delay);
-    //             if ( gl.box[i][0] < -10.0 )
-    //                 gl.box[i][0] += gl.xres + 10.0;
-    //             gl.camera[0] += 2.0/lev.tilesize[0] * ( 0.1 / gl.delay );
-    //             if ( gl.camera[0] < 0.0 )
-    //                 gl.camera[0] = 0.0;
-    //         }
-    //     }
-    // }
+    float tileOffset = findTileOffset(col);
 
     updateDash();
     if (gl.keys[XK_Right] || gl.keys[XK_Left] || gl.keys[XK_a] || gl.keys[XK_d]) {
         //updateDash();
         for ( int i=0; i<20; i++ ) {
-            if ( (gl.keys[XK_Left] || gl.keys[XK_a]) && leftWall < -32.0f ) {
+            if ( (gl.keys[XK_Left] || gl.keys[XK_a]) && leftWall < (-32.0f + tileOffset)) {
                 gl.facing = 0;
                 gl.ball_vel[0] = -gl.ball_speed;
                 gl.box[i][0] += gl.ball_vel[0];
-                // if ( gl.box[i][0] > gl.xres + 10.0 )
-                //     gl.box[i][0] -= gl.xres + 10.0;
+                if ( gl.box[i][0] > gl.xres + 10.0 )
+                    gl.box[i][0] -= gl.xres + 10.0;
                 gl.camera[0] += gl.ball_vel[0];
-                // if ( gl.camera[0] < 0.0 )
-                //     gl.camera[0] = 0.0;
-            } else if ( (gl.keys[XK_Right] || gl.keys[XK_d]) && rightWall > 32.0f ) {
+                if ( gl.camera[0] < 0.0 )
+                    gl.camera[0] = 0.0;
+            } else if ( (gl.keys[XK_Right] || gl.keys[XK_d]) && (rightWall - tileOffset) >= (32.0f) ) {
                 gl.facing = 1;
                 gl.ball_vel[0] = gl.ball_speed;
                 gl.box[i][0] += gl.ball_vel[0];
-                // if ( gl.box[i][0] < -10.0 )
-                //     gl.box[i][0] += gl.xres + 10.0;
+                if ( gl.box[i][0] < -10.0 )
+                    gl.box[i][0] += gl.xres + 10.0;
                 gl.camera[0] += gl.ball_vel[0];
-                // if ( gl.camera[0] < 0.0 )
-                //     gl.camera[0] = 0.0;
+                if ( gl.camera[0] < 0.0 )
+                    gl.camera[0] = 0.0;
             }
         }
     }
-
-    //printf("%f\n", gl.camera[0]);
+    //printf("%f %f\n", (leftWall + tileOffset), (rightWall + tileOffset));
 
     //Jump Functionality - Nicklas Chiang
     for ( int i=0; i<20; i++ ) {
@@ -825,17 +741,20 @@ void physics(void)
 
     int floor = findFloor(col, row);
     int cieling = findCeiling(col, row);
-    // jumping
-    if (((gl.ball_pos[1] + 24.0f) > cieling) && (gl.ball_vel[1] >= 0.0f)) {
-        gl.ball_vel[1] = 0.0f;
-    }
-    // falling
-    if (((gl.ball_pos[1] - 10.0f) < floor) && (gl.ball_vel[1] <= 0.0f)) {
-        gl.ball_vel[1] = 0.0f;
-    } else {
-        if (gl.ball_vel[1] > -9.0f)
-            gl.ball_vel[1] -= 0.9f;
-    }
+    // // jumping
+    // if (((gl.ball_pos[1] + 24.0f) > cieling) && (gl.ball_vel[1] >= 0.0f)) {
+    //     gl.ball_vel[1] = 0.0f;
+    // }
+    // // falling
+    // if (((gl.ball_pos[1] - 10.0f) < floor) && (gl.ball_vel[1] <= 0.0f)) {
+    //     gl.ball_vel[1] = 0.0f;
+    // } else {
+    //     if (gl.ball_vel[1] > -9.0f)
+    //         gl.ball_vel[1] -= 0.9f;
+    // }
+
+    updateYVelocity(cieling, floor);
+
     // update y position with current y velocity
     gl.ball_pos[1] += gl.ball_vel[1];
     if (gl.ball_pos[1] < -256.0f) {
@@ -870,19 +789,19 @@ void render(void) {
       srand(time(NULL));
 
       // Draw the stars
-     int numStars = 100; // Number of stars you want
-      glColor3f(1.0, 1.0, 1.0); // Set the star color to white
-      glPointSize(2.0); // Set the size of the stars
-      glBegin(GL_POINTS);
-      for (int i = 0; i < numStars; i++) {
-          float x = static_cast<float>(rand() % gl.xres);
-          float y = static_cast<float>(rand() % gl.yres);
-          glVertex2f(x, y);
-      }
-      glEnd();
+    int numStars = 100; // Number of stars you want
+    glColor3f(1.0, 1.0, 1.0); // Set the star color to white
+    glPointSize(2.0); // Set the size of the stars
+    glBegin(GL_POINTS);
+    for (int i = 0; i < numStars; i++) {
+        float x = static_cast<float>(rand() % gl.xres);
+        float y = static_cast<float>(rand() % gl.yres);
+        glVertex2f(x, y);
+    }
+    glEnd();
 
-      // Restore the default color (if other drawing operations follow)
-      glColor3f(1.0, 1.0, 1.0);
+    // Restore the default color (if other drawing operations follow)
+    glColor3f(1.0, 1.0, 1.0);
 
     //float cx = gl.xres/2.0;
     //float cy = gl.yres/2.0;   
@@ -897,7 +816,7 @@ void render(void) {
     int ncols_to_render = gl.xres / lev.tilesize[0] + 2;
     int col = (int)(gl.camera[0] / dd);
     
-    col = col % lev.ncols;
+    //col = col % lev.ncols;
     //Partial tile offset must be determined here.
     //The leftmost tile might be partially off-screen.
     //cdd: camera position in terms of tiles.
@@ -951,8 +870,19 @@ void render(void) {
                 glEnd();
                 glPopMatrix();
             }
+            if (lev.arr[row][col] == 'e') {
+                glColor3f(0.2, 0.2, 0.2);
+                glPushMatrix();
+                glTranslated((Flt)j*dd+offx, (Flt)i*lev.ftsz[1]+offy, 0);
+                glBegin(GL_QUADS);
+                glVertex2i( 0,  0);
+                glVertex2i( 0, ty);
+                glVertex2i(tx, ty);
+                glVertex2i(tx,  0);
+                glEnd();
+                glPopMatrix();
+            }
             --row;
-
         }
 
         col = (col+1) % lev.ncols;
@@ -992,6 +922,7 @@ void render(void) {
                 //    gl.current_hp -= 1;
                 //}
                 if (!damageImmune()) {
+                    playOwSound();
                     float decrease = 25;
                     gl.current_hp -= decrease;
 
@@ -1002,7 +933,8 @@ void render(void) {
                 }
             } else {
                 // Display the spike at the updated position
-                showSpikes(spikeX, spikeY, 10.0);             }
+                showSpikes(spikeX, spikeY, 10.0);            
+            }
         }
     }
 
@@ -1086,5 +1018,4 @@ void render(void) {
     //Calls from nchiang.cpp to display hp on screen
     //gl.current_hp = 100;
     display_hp(gl.current_hp, gl.max_hp); 
-
 }

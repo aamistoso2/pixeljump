@@ -100,6 +100,7 @@ void playBackgroundMusic() {
     ALuint buffer, source;
     buffer = alutCreateBufferFromFile("./sounds/battle.wav");
     alGenSources(1, &source);
+    alSourcef(source, AL_GAIN, 0.2f);
     alSourcei(source, AL_BUFFER, buffer);
     // Loop the background music
     alSourcei(source, AL_LOOPING, AL_TRUE);

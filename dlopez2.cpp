@@ -33,7 +33,6 @@ void display_border(int xres, int yres)
 	glPopMatrix();
 }
 
-
 float mouse_movement_distance(int x, int y, bool get) {
 	static float distance;
 	static int first_time = 1;
@@ -87,6 +86,15 @@ void playDashSound() {
 	alSourcef(source2, AL_GAIN, 0.5f);
     alSourcei(source2, AL_BUFFER, buffer2);
     alSourcePlay(source2);
+}
+
+void playOwSound() {
+    ALuint buffer, source;
+    buffer = alutCreateBufferFromFile("./sounds/ow.wav");
+    alGenSources(1, &source);
+	alSourcef(source, AL_GAIN, 0.5f);
+    alSourcei(source, AL_BUFFER, buffer);
+    alSourcePlay(source);
 }
 
 void dash() {
@@ -143,7 +151,8 @@ float findRightWall(int col, int row) {
 	float rightWall = 0;
 	int arrRow = (lev.nrows - row) - 1;
 	for (int i = col; i < lev.ncols; i++) {
-        if (lev.arr[arrRow][i] == 'b' || lev.arr[arrRow][i] == 'w') {
+        if (lev.arr[arrRow][i] == 'b' || lev.arr[arrRow][i] == 'w' 
+									  || lev.arr[arrRow][i] == 'e') {
             break;
         }
         rightWall = rightWall + 1.0f;
@@ -155,12 +164,20 @@ float findLeftWall(int col, int row) {
 	float leftWall = 0;
 	int arrRow = (lev.nrows - row) - 1;
 	for (int j = col; j >= 0; j--) {
-        if (lev.arr[arrRow][j] == 'b' || lev.arr[arrRow][j] == 'w') {
+        if (lev.arr[arrRow][j] == 'b' || lev.arr[arrRow][j] == 'w'
+									  || lev.arr[arrRow][j] == 'e') {
             break;
         }
         leftWall = leftWall - 1.0f;
     }
     return leftWall = (leftWall * lev.tilesize[0]);
+}
+
+float findTileOffset(int col) {
+	//int arrRow = (lev.nrows - row) - 1;
+	float colPos = (col - 9) * lev.ftsz[0];
+	float tileOffset = gl.camera[0] - colPos; // / lev.ftsz[0];
+	return tileOffset;
 }
 
 int damageImmune() {
@@ -173,4 +190,28 @@ int damageImmune() {
 	else {
 		return 1;
 	}
+}
+
+void updateYVelocity(int ceiling, int floor) {
+	// jumping
+    if (((gl.ball_pos[1] + 24.0f) > ceiling) && (gl.ball_vel[1] >= 0.0f)) {
+        gl.ball_vel[1] = 0.0f;
+    }
+    // falling
+    if (((gl.ball_pos[1] - 10.0f) < floor) && (gl.ball_vel[1] <= 0.0f)) {
+        gl.ball_vel[1] = 0.0f;
+    } else {
+        if (gl.ball_vel[1] > -9.0f)
+            gl.ball_vel[1] -= 0.9f;
+    }
+}
+
+void printControls() {
+	printf("A or D to walk left or right\n");
+	printf("W to dash\n");
+	printf("SPACE to jump\n");
+	printf("Press SPACE again while in the air to double jump\n");
+	printf("HOLD LEFT SHIFT to sprint\n");
+	printf("R to reset\n");
+	//fflush(stdout);
 }

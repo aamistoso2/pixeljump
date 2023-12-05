@@ -11,6 +11,12 @@ extern float findLeftWall(int col, int row);
 extern int findFloor(int col, int row);
 extern int findCeiling(int col, int row);
 extern void playJumpSound();
+extern void playOwSound();
+extern void playDashSound();
 extern int damageImmune();
+extern float findTileOffset(int col);
+extern void updateYVelocity(int ceiling, int floor);
+extern void printControls();
+
 
 #endif
