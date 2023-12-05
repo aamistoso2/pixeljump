@@ -846,27 +846,27 @@ void render(void) {
             //showCoins(tileCenterX, tileCenterY);
 
             if (lev.arr[row][col] == 'w') {
-                glColor3f(0.8, 0.8, 0.6);
+                glColor3f(0.5, 0.5, 0.5);
                 glPushMatrix();
                 //put tile in its place
                 glTranslated((Flt)j*dd+offx, (Flt)i*lev.ftsz[1]+offy, 0);
                 glBegin(GL_QUADS);
-                glVertex2i( 0,  0);
-                glVertex2i( 0, ty);
-                glVertex2i(tx, ty);
-                glVertex2i(tx,  0);
+                    glVertex2i( 0,  0);
+                    glVertex2i( 0, ty);
+                    glVertex2i(tx, ty);
+                    glVertex2i(tx,  0);
                 glEnd();
                 glPopMatrix();
             }
             if (lev.arr[row][col] == 'b') {
-                glColor3f(0.9, 0.2, 0.2);
+                glColor3f(0.44, 0.31, 0.69);
                 glPushMatrix();
                 glTranslated((Flt)j*dd+offx, (Flt)i*lev.ftsz[1]+offy, 0);
                 glBegin(GL_QUADS);
-                glVertex2i( 0,  0);
-                glVertex2i( 0, ty);
-                glVertex2i(tx, ty);
-                glVertex2i(tx,  0);
+                    glVertex2i( 0,  0);
+                    glVertex2i( 0, ty);
+                    glVertex2i(tx, ty);
+                    glVertex2i(tx,  0);
                 glEnd();
                 glPopMatrix();
             }
@@ -875,10 +875,10 @@ void render(void) {
                 glPushMatrix();
                 glTranslated((Flt)j*dd+offx, (Flt)i*lev.ftsz[1]+offy, 0);
                 glBegin(GL_QUADS);
-                glVertex2i( 0,  0);
-                glVertex2i( 0, ty);
-                glVertex2i(tx, ty);
-                glVertex2i(tx,  0);
+                    glVertex2i( 0,  0);
+                    glVertex2i( 0, ty);
+                    glVertex2i(tx, ty);
+                    glVertex2i(tx,  0);
                 glEnd();
                 glPopMatrix();
             }
